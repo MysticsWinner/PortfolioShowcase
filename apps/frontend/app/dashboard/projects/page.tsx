@@ -1,4 +1,1 @@
-export default async function AdminProjectsPage() {
-  const projects = await getPrivateProjects();
-  return <AdminProjectTable projects={projects} />;
-}
+export default function ProjectsPage() { return <div>Projects</div>; }

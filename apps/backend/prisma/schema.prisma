@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RoleType {
+  ADMIN
+  VIEWER
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum ProjectStatus {
+  DRAFT
+  PUBLISHED
+}
+
+/**
+ * =======================
+ * AUTH & USER
+ * =======================
+ */
+
+model User {
+  id       String  @id @default(uuid())
+  name     String
+  email    String  @unique
+  password String
+  isActive Boolean @default(true)
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  projects   Project[]
+  portfolios Portfolio[]
+  tokens     RefreshToken[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id   String   @id @default(uuid())
+  type RoleType @unique
+
+  users User[]
+}
+
+/**
+ * =======================
+ * PROJECTS
+ * =======================
+ */
+
+model Project {
+  id          String        @id @default(uuid())
+  title       String
+  description String
+  content     String?
+  visibility  Visibility    @default(PUBLIC)
+  status      ProjectStatus @default(DRAFT)
+
+  repoUrl   String?
+  liveUrl   String?
+  thumbnail String?
+
+  creatorId String
+  creator   User   @relation(fields: [creatorId], references: [id])
+
+  technologies ProjectTechnology[]
+  tags         ProjectTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/**
+ * =======================
+ * EXTERNAL WORK
+ * =======================
+ */
+
+model ExternalWork {
+  id          String     @id @default(uuid())
+  title       String
+  description String
+  role        String?
+  company     String?
+  liveUrl     String
+  visibility  Visibility @default(PUBLIC)
+
+  technologies ExternalWorkTechnology[]
+  tags         ExternalWorkTag[]
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * =======================
+ * TECHNOLOGY & TAGS
+ * =======================
+ */
+
+model Technology {
+  id       String  @id @default(uuid())
+  name     String  @unique
+  category String?
+
+  projects ProjectTechnology[]
+  external ExternalWorkTechnology[]
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  projects ProjectTag[]
+  external ExternalWorkTag[]
+}
+
+/**
+ * =======================
+ * JOIN TABLES
+ * =======================
+ */
+
+model ProjectTechnology {
+  projectId    String
+  technologyId String
+
+  project    Project    @relation(fields: [projectId], references: [id])
+  technology Technology @relation(fields: [technologyId], references: [id])
+
+  @@id([projectId, technologyId])
+}
+
+model ExternalWorkTechnology {
+  externalWorkId String
+  technologyId   String
+
+  externalWork ExternalWork @relation(fields: [externalWorkId], references: [id])
+  technology   Technology   @relation(fields: [technologyId], references: [id])
+
+  @@id([externalWorkId, technologyId])
+}
+
+model ProjectTag {
+  projectId String
+  tagId     String
+
+  project Project @relation(fields: [projectId], references: [id])
+  tag     Tag     @relation(fields: [tagId], references: [id])
+
+  @@id([projectId, tagId])
+}
+
+model ExternalWorkTag {
+  externalWorkId String
+  tagId          String
+
+  externalWork ExternalWork @relation(fields: [externalWorkId], references: [id])
+  tag          Tag          @relation(fields: [tagId], references: [id])
+
+  @@id([externalWorkId, tagId])
+}
+
+/**
+ * =======================
+ * AUTH TOKENS
+ * =======================
+ */
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * =======================
+ * CONTACT FORM
+ * =======================
+ */
+
+model ContactMessage {
+  id      String  @id @default(uuid())
+  name    String
+  email   String
+  message String
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+/**
+ * =======================
+ * PORTFOLIO UPLOADS
+ * =======================
+ */
+
+model Portfolio {
+  id    String @id @default(uuid())
+  title String
+  data  String // Encrypted portfolio data
+  iv    String // Initialization vector for encryption
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

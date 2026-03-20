@@ -1,0 +1,29 @@
+
+> frontend@0.1.0 build
+> next build
+
+▲ Next.js 16.1.0 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.8s
+  Running TypeScript ...
+Failed to compile.
+
+.next/dev/types/validator.ts:60:39
+Type error: File 'C:/Users/tanma/OneDrive/Documents/Code/PortfolioShowcase/apps/frontend/app/dashboard/page.tsx' is not a module.
+
+[0m [90m 58 |[39m {
+ [90m 59 |[39m   type __IsExpected[33m<[39m[33mSpecific[39m [36mextends[39m [33mAppPageConfig[39m[33m<[39m[32m"/dashboard"[39m[33m>>[39m [33m=[39m [33mSpecific[39m
+[31m[1m>[22m[39m[90m 60 |[39m   [36mconst[39m handler [33m=[39m {} [36mas[39m [36mtypeof[39m [36mimport[39m([32m"../../../app/dashboard/page.js"[39m)
+ [90m    |[39m                                       [31m[1m^[22m[39m
+ [90m 61 |[39m   type __Check [33m=[39m __IsExpected[33m<[39m[36mtypeof[39m handler[33m>[39m
+ [90m 62 |[39m   [90m// @ts-ignore[39m
+ [90m 63 |[39m   type __Unused [33m=[39m __Check[0m
+Next.js build worker exited with code: 1 and signal: null
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\Users\tanma\OneDrive\Documents\Code\PortfolioShowcase\apps\frontend
+npm error workspace frontend@0.1.0
+npm error location C:\Users\tanma\OneDrive\Documents\Code\PortfolioShowcase\apps\frontend
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c next build
