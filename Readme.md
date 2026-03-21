@@ -1,256 +1,151 @@
-1️⃣ Database
-2️⃣ Backend core (auth + entities)
-3️⃣ Backend endpoints
-4️⃣ Frontend auth wiring
-5️⃣ Frontend pages
-6️⃣ Integration verification
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+  <img src="https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+</div>
 
+<h1 align="center">Portfolio Showcase Platform</h1>
 
-1️⃣ DATABASE — MAKE IT REAL
-Step 1: Start PostgreSQL (Local)
-Using Docker (recommended):
+<p align="center">
+  A highly secure, full-stack monorepo application designed to seamlessly manage, encrypt, and present professional portfolios and developmental projects. Built with an unapologetic focus on modern aesthetics, rigorous authentication, and clean decoupled architecture.
+</p>
 
-bash
-Copy code
-docker run --name portfolio-db \
-  -e POSTGRES_PASSWORD=postgres \
-  -e POSTGRES_DB=portfolio \
-  -p 5432:5432 \
-  -d postgres
-Why:
+---
 
-Real DB
+## 🚀 About the Project
 
-Same as production
+The **Portfolio Showcase Platform** is a monolithic repository developed to bridge the gap between elegant frontend presentation and highly restrictive backend data security. As a developing software engineer, this project served as a comprehensive testing ground to move beyond basic CRUD applications and dive deep into real-world production constraints—like cross-environment symmetric encryption, strict JSON Web Token Lifecycle management, and raw Next.js 14 hydration patterns.
 
-Zero local setup issues
+### 🧠 What I Learned
 
-Step 2: Apply Prisma Schema
-bash
-Copy code
-cd database
-npx prisma migrate dev --name init
-Why:
+Building this project was a massive leap forward in my understanding of professional system architectures. Key learning milestones include:
 
-Creates tables
+1. **Applied Cryptography (AES-256 at Rest)**
+   - I successfully engineered a secure interception layer in the backend that symmetrically encrypts sensitive portfolio data natively in memory before it even touches the PostgreSQL database, and dynamically decrypts it upon authorized retrieval.
+2. **Advanced Authentication & JWT Lifecycle (Passport.js)**
+   - I mastered stateless authentication by replacing basic hardcoded checkpoints with the raw NestJS Passport JWT Strategy. My API intercepts `401 Unauthorized` responses on the frontend, autonomously shreds stale cache payloads in `localStorage`, and mitigates cyclic React layout loops gracefully.
+3. **Database Adapter Resilience & Edge Isolation**
+   - I diagnosed and resolved complex `PrismaClient` initialization failures related to Edge runtime execution by wiring `@prisma/adapter-pg` across the native `pg` Node drivers, natively expanding the framework's TCP isolation tolerance.
+4. **React Hydration & External DOM Mutators**
+   - I investigated and successfully mitigated critical `React Hydration Errors` triggered by browser extensions (like Grammarly) mutating the DOM mid-mount, securing the Next.js `layout.tsx` tree via strict `suppressHydrationWarning` flags.
+5. **Aesthetic UI Engineering**
+   - Built a sleek, premium dark-mode interface utilizing heavily tailored Tailwind CSS glassmorphisms (`backdrop-blur`) paired intricately with Framer Motion grid-layout staggered entrance animations.
 
-Locks schema
+---
 
-Enables Prisma Client
+## ✨ Core Features
 
-Verify:
+- **Strict Route Protection:** Unauthenticated users are sandboxed globally via Next.js Layout hooks. Protected routes dynamically evaluate the presence of valid browser cache tokens.
+- **AES-Encryption At-Rest:** Private portfolio documentation is scrambled natively via cryptographic primitives.
+- **Global API Logging Middleware:** Custom NestJS HTTP middleware meticulously tags and tracks incoming payloads and routing durations.
+- **Database User Strictness:** Passwords are mathematically hashed via `bcrypt` natively. The platform actively scans the PostgreSQL configuration matrix to ensure accounts strictly flag `isActive: true` before yielding API scopes.
+- **Monorepo Workspaces:** Cleanly segregated `apps/frontend` and `apps/backend` layers strictly orchestrating data via REST networks without domain cross-contamination.
 
-bash
-Copy code
-npx prisma studio
-You should see all entities (User, Project, etc.).
+---
 
-2️⃣ BACKEND — MAKE IT SERVE REAL DATA
-Step 3: Start Backend
-bash
-Copy code
+## 🛠️ Technology Stack
+
+**Frontend Ecosystem**
+- **Next.js 14 (App Router)** - React server-centric ecosystem
+- **Tailwind CSS** - Rapid utility-first styling matrix
+- **Framer Motion** - Cinematic layout transitioning
+- **Axios** - Intercepted HTTP networking payload handler
+
+**Backend Ecosystem**
+- **NestJS 11** - Heavily opinionated, heavily structured Node.js API
+- **Prisma ORM** - Synchronous PostgreSQL abstractions
+- **Passport JWT** - Bearer token payload signature verification
+- **Bcrypt & Node Crypto** - AES-256 and Password salting
+
+---
+
+## 📂 Repository Structure
+
+```tree
+📦 portfolio-showcase
+ ┣ 📂 apps/
+ ┃ ┣ 📂 backend/         # NestJS Root Directory
+ ┃ ┃ ┣ 📂 prisma/        # PostgreSQL Schema & Migrations
+ ┃ ┃ ┗ 📂 src/           # Core API modules (Auth, Projects, Portfolios)
+ ┃ ┗ 📂 frontend/        # Next.js 14 Root Directory
+ ┃   ┣ 📂 app/           # App Router Layouts & Pages
+ ┃   ┣ 📂 components/    # Reusable Tailwind UI (Navbar, Cards)
+ ┃   ┗ 📂 utils/         # Intercepted Axios API connectors
+ ┣ 📜 package.json       # Monorepo Workspace Definitions
+ ┗ 📜 pnpm-workspace.yaml
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+You will need the following dependencies installed locally to boot the platform:
+- `Node.js` (v18+)
+- `pnpm` (Core workspace package manager)
+- `PostgreSQL` (Live instance running locally on Port 5432)
+
+### 1. Installation
+
+Clone the repository and install all monorepo dependencies seamlessly from the root workspace:
+
+```bash
+git clone https://github.com/your-username/portfolio-showcase.git
+cd portfolio-showcase
+pnpm install
+```
+
+### 2. Environment Configurations
+
+You must generate secure environment variable blocks for both the Backend and Frontend. 
+
+**Backend (`apps/backend/.env`)**
+```env
+DATABASE_URL="postgresql://postgres:your_password@localhost:5432/portfolio"
+JWT_SECRET="generate_a_highly_secure_random_string_here"
+PORT=3001
+COOKIE_SECRET="generate_another_random_secret"
+NODE_ENV="development"
+ENCRYPTION_KEY="0123456789abcdef0123456789abcdef" # MUST be strictly 32 bytes for AES-256!
+```
+
+**Frontend (`apps/frontend/.env.local`)**
+```env
+NEXT_PUBLIC_API_URL="http://localhost:3001"
+```
+
+### 3. Database Synchronization
+
+Migrate the Prisma schema to construct the live PostgreSQL tables automatically:
+
+```bash
 cd apps/backend
-pnpm run start:dev
-Backend should start on:
+npx prisma db push
+```
 
-arduino
-Copy code
-http://localhost:3001
-Step 4: Implement Auth (MANDATORY FIRST)
-Auth flow
-pgsql
-Copy code
-POST /auth/login
-→ validate credentials
-→ issue access + refresh tokens
-→ return user + role
-Minimal working logic:
+### 4. Booting the Matrix
 
-Hash password with bcrypt
+Run the frontend and backend instances concurrently directly from their respective terminal windows:
 
-JWT for access
+**Backend Terminal:**
+```bash
+cd apps/backend
+npm run start:dev
+```
 
-Refresh token in DB
+**Frontend Terminal:**
+```bash
+cd apps/frontend
+npm run dev
+```
 
-Why first?
+Visit `http://localhost:3000` to interact with the frontend interface. The backend API is synchronously listening on port `3001`.
 
-Everything depends on auth
+---
 
-RBAC blocks private data
-
-Step 5: Seed Initial Admin User
-Create seed script:
-
-bash
-Copy code
-database/seed/seed.ts
-Seed:
-
-Role: ADMIN
-
-User: you
-
-Run:
-
-bash
-Copy code
-pnpm ts-node database/seed/seed.ts
-Verify:
-
-Admin exists in DB
-
-Password works
-
-Step 6: Implement Core APIs
-Minimum required endpoints
-Entity	Endpoint	Purpose
-Auth	/auth/login	Login
-Auth	/auth/me	Session validation
-Project	/projects	Public projects
-Project	/projects/private	Admin projects
-Project	/projects (POST)	Create project
-Contact	/contact	Save messages
-
-Why this set?
-
-Covers full read/write lifecycle
-
-Supports public + admin views
-
-3️⃣ FRONTEND — CONNECT TO REAL BACKEND
-Step 7: Configure API Client
-📄 services/api.client.ts
-
-ts
-Copy code
-export const api = axios.create({
-  baseURL: "http://localhost:3001",
-  withCredentials: true
-});
-Why:
-
-Centralizes API logic
-
-Enables token handling
-
-Future-proof
-
-Step 8: Login Flow (Critical)
-Flow:
-
-pgsql
-Copy code
-Login Page
-→ POST /auth/login
-→ Save token (cookie or memory)
-→ Redirect to /dashboard
-Verification:
-
-Login succeeds
-
-Reload page → still logged in
-
-Dashboard accessible
-
-If this works → everything else will.
-
-Step 9: Middleware Protection
-📄 app/middleware.ts
-
-Logic:
-
-Block /dashboard if not authenticated
-
-Allow public pages
-
-Why:
-
-Enforces RBAC on frontend
-
-Prevents accidental leaks
-
-4️⃣ FEATURE PAGES — MAKE THEM LIVE
-Projects (Public)
-Call GET /projects
-
-Render cards
-
-No auth required
-
-Check:
-
-Shows only PUBLIC projects
-
-Dashboard → Projects
-Call GET /projects/private
-
-Admin only
-
-Check:
-
-Hidden projects visible
-
-Edit + create works
-
-Create Project
-Flow:
-
-bash
-Copy code
-Form → POST /projects
-→ DB save
-→ Re-fetch list
-Check:
-
-Appears instantly
-
-Visibility toggle works
-
-Contact Page
-Flow:
-
-bash
-Copy code
-Form → POST /contact
-→ Success message
-Admin:
-
-View via /dashboard/messages
-
-5️⃣ SYSTEM VERIFICATION CHECKLIST
-Your project is operational if all boxes are checked:
-
-✅ Backend runs independently
-✅ Frontend loads without mocks
-✅ Login persists on refresh
-✅ Private projects hidden from public
-✅ Admin dashboard fully functional
-✅ DB survives restarts
-✅ No hardcoded data
-
-🧪 HOW TO TEST LIKE A PRO
-Manual test flow
-Open site as guest
-
-View public projects
-
-Try accessing /dashboard → blocked
-
-Login as admin
-
-Create private project
-
-Logout
-
-Confirm private project hidden
-
-If this passes → you’ve built a real system
-
-🎯 WHAT THIS PROJECT NOW PROVES
-Skill	Evidence
-Full-stack	Frontend + backend + DB
-Auth	JWT + RBAC
-Architecture	Monorepo, clean layers
-Data modeling	Prisma schema
-API design	REST contracts
-Production thinking	Env config, seeding
+<p align="center">
+  <i>"Writing code is easy. Architecting fault-tolerant, uncompromisingly secure infrastructure is the true milestone."</i>
+</p>
