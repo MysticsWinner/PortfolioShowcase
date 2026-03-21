@@ -1,0 +1,13 @@
+=== DATABASE STATE ===
+
+--- ROLES ---
+[ { id: '37e8d119-7e07-4a3c-afe9-338761cd672a', type: 'VIEWER' } ]
+
+--- USERS ---
+ID: 1bc0d2ab-f099-447f-b67f-89ea3e5dceda | Name: Test Setup | Email: test@example.com | Active: true | Role: VIEWER
+ID: 56c7663c-d93f-42d6-aa64-6a9b9de0a15b | Name: John Doe | Email: john@example.com | Active: true | Role: VIEWER
+ID: c4bd5892-db95-4103-8410-b63f185202c5 | Name: Test Setup | Email: test1774055029522@example.com | Active: true | Role: VIEWER
+
+--- PORTFOLIOS ---
+[]
+======================

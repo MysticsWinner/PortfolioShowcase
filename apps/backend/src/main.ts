@@ -12,6 +12,7 @@ async function bootstrap() {
 
   app.use(cookieParser());
 
-  await app.listen(3001);
+  await app.listen(process.env.PORT ?? 3001);
+  console.log('Server booted and env picked up!');
 }
 bootstrap();

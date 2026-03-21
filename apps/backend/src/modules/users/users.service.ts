@@ -11,4 +11,18 @@ export class UsersService {
       include: { role: true },
     });
   }
+
+  async create(data: any) {
+    let viewerRole = await this.prisma.role.findUnique({ where: { type: 'VIEWER' } });
+    if (!viewerRole) {
+      viewerRole = await this.prisma.role.create({ data: { type: 'VIEWER' } });
+    }
+    return this.prisma.user.create({
+      data: {
+        ...data,
+        isActive: false,
+        roleId: viewerRole.id,
+      },
+    });
+  }
 }

@@ -1,0 +1,20 @@
+
+> frontend@0.1.0 build
+> next build
+
+
+> Build error occurred
+Error: EPERM: operation not permitted, unlink 'C:\Users\tanma\OneDrive\Documents\Code\PortfolioShowcase\apps\frontend\.next\static\chunks'
+    at ignore-listed frames {
+  errno: -4048,
+  code: 'EPERM',
+  syscall: 'unlink',
+  path: 'C:\\Users\\tanma\\OneDrive\\Documents\\Code\\PortfolioShowcase\\apps\\frontend\\.next\\static\\chunks'
+}
+npm error Lifecycle script `build` failed with error:
+npm error code 1
+npm error path C:\Users\tanma\OneDrive\Documents\Code\PortfolioShowcase\apps\frontend
+npm error workspace frontend@0.1.0
+npm error location C:\Users\tanma\OneDrive\Documents\Code\PortfolioShowcase\apps\frontend
+npm error command failed
+npm error command C:\WINDOWS\system32\cmd.exe /d /s /c next build

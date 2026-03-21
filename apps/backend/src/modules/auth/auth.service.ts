@@ -11,17 +11,56 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    const user = await this.users.findByEmail(email);
+    try {
+      const user = await this.users.findByEmail(email);
 
-    if (!user || !(await compare(password, user.password))) {
-      throw new UnauthorizedException();
+      if (!user || !(await compare(password, user.password))) {
+        const { UnauthorizedException } = await import('@nestjs/common');
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
+      if (!user.isActive) {
+        const { UnauthorizedException } = await import('@nestjs/common');
+        throw new UnauthorizedException('Email not confirmed. Please check your inbox.');
+      }
+
+      const payload = { sub: user.id, role: user.role?.type || 'VIEWER' };
+
+      return {
+        accessToken: this.jwt.sign(payload),
+        user,
+      };
+    } catch (e: any) {
+      if (e.name === 'UnauthorizedException') throw e;
+      return { message: "DEBUG_LOGIN_ERROR", error: e.stack || e.message };
     }
+  }
 
-    const payload = { sub: user.id, role: user.role.type };
+  async register(name: string, email: string, pass: string) {
+    try {
+      const { hash } = await import('bcrypt');
+      const hashedPassword = await hash(pass, 10);
+      const user = await this.users.create({
+        name,
+        email,
+        password: hashedPassword,
+      });
 
-    return {
-      accessToken: this.jwt.sign(payload),
-      user,
-    };
+      if (!user.isActive) {
+        return { requiresConfirmation: true, message: 'Please confirm your email' };
+      }
+
+      const payload = { sub: user.id, role: 'VIEWER' };
+      return {
+        accessToken: this.jwt.sign(payload),
+        user,
+      };
+    } catch (e: any) {
+      if (e.code === 'P2002') {
+        const { ConflictException } = await import('@nestjs/common');
+        throw new ConflictException('Email already in use.');
+      }
+      throw e;
+    }
   }
 }
