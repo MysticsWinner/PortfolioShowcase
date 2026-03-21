@@ -11,10 +11,16 @@ export default function NewPortfolioPage() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (title: string, data: string) => {
+  const handleSubmit = async (title: string, data: string, file: File | null) => {
     setIsSubmitting(true);
     try {
-      await portfolioApi.createPortfolio(MOCK_USER_ID, title, data);
+      const newPortfolio = await portfolioApi.createPortfolio(MOCK_USER_ID, title, data);
+      
+      // If the user physically attached a secure binary document (.pdf/.docx), dispatch the Multipart pipeline!
+      if (file && newPortfolio.id) {
+        await portfolioApi.uploadPortfolioFile(newPortfolio.id, file);
+      }
+
       router.push('/dashboard/portfolios');
     } catch (error) {
       console.error("Failed to create portfolio", error);

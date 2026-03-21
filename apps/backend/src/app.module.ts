@@ -9,6 +9,7 @@ import { ProjectsModule } from './modules/projects/projects.module';
 import { ContactModule } from './modules/contact/contact.module';
 import { PortfoliosModule } from './modules/portfolios/portfolios.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AdminModule } from './modules/admin/admin.module';
     ContactModule,
     PortfoliosModule,
     AdminModule,
+    MailModule,
   ],
 })
 export class AppModule implements NestModule {

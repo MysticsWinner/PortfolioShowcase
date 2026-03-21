@@ -39,6 +39,8 @@ export interface Portfolio {
   id: string;
   title: string;
   data: string;
+  fileUrl?: string;
+  fileType?: string;
   createdAt: string;
 }
 
@@ -92,6 +94,39 @@ export const portfolioApi = {
       params: { userId },
     });
     return response.data;
+  },
+
+  /**
+   * Transmit a native binary file buffer to the authenticated backend routes securely.
+   */
+  async uploadPortfolioFile(portfolioId: string, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await apiClient.post(`/portfolios/${portfolioId}/upload`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data;
+  },
+
+  /**
+   * Safely intercept and download protected HTTP file streams without exposing raw public URL links.
+   */
+  async downloadPortfolioFile(portfolioId: string, filename: string) {
+    const response = await apiClient.get(`/portfolios/${portfolioId}/download`, {
+      responseType: 'blob',
+    });
+    
+    // Architect virtual anchor execution to physically pull the Blob onto the hard drive
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    
+    // Cleanly obliterate the DOM node and blob cache
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   },
 };
 

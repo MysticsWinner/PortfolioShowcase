@@ -40,6 +40,14 @@ export default function PortfoliosPage() {
     }
   };
 
+  const handleDownload = async (id: string, filename: string) => {
+    try {
+      await portfolioApi.downloadPortfolioFile(id, filename);
+    } catch (err) {
+      alert("Failed to securely stream the binary document from the server.");
+    }
+  };
+
   return (
     <div className="min-h-[80vh] p-8 md:p-12 relative w-full overflow-hidden">
       {/* Background Orbs */}
@@ -100,6 +108,7 @@ export default function PortfoliosPage() {
                   key={portfolio.id} 
                   portfolio={portfolio} 
                   onDelete={handleDelete} 
+                  onDownload={handleDownload}
                 />
               ))}
             </AnimatePresence>

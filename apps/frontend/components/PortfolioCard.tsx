@@ -7,9 +7,10 @@ import { Portfolio } from '../utils/api';
 interface PortfolioCardProps {
   portfolio: Portfolio;
   onDelete: (id: string) => void;
+  onDownload?: (id: string, filename: string) => void;
 }
 
-export default function PortfolioCard({ portfolio, onDelete }: PortfolioCardProps) {
+export default function PortfolioCard({ portfolio, onDelete, onDownload }: PortfolioCardProps) {
   return (
     <motion.div
       layout
@@ -42,6 +43,18 @@ export default function PortfolioCard({ portfolio, onDelete }: PortfolioCardProp
         <p className="text-sm text-gray-400 line-clamp-4 leading-relaxed font-light">
           {portfolio.data}
         </p>
+
+        {portfolio.fileUrl && (
+          <button
+            onClick={() => onDownload?.(portfolio.id, "portfolio_document" + (portfolio.fileType?.includes('pdf') ? '.pdf' : '.docx'))}
+            className="mt-6 w-full py-2.5 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 rounded-xl text-violet-300 font-semibold text-sm transition-all flex items-center justify-center gap-2 group/btn"
+          >
+            <svg className="w-4 h-4 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Unlock & Download File
+          </button>
+        )}
       </div>
 
       <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center text-xs text-gray-500 font-medium">

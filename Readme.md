@@ -38,6 +38,7 @@ Building this project was a massive leap forward in my understanding of professi
 ## ✨ Core Features
 
 - **Strict Route Protection:** Unauthenticated users are sandboxed globally via Next.js Layout hooks. Protected routes dynamically evaluate the presence of valid browser cache tokens.
+- **Dynamic OTP Verification & SMTP Emailing:** New users are locked securely behind a 15-minute cryptographically generated OTP authentication sequence. Integrates natively with live Nodemailer SMTP transports or defaults gracefully back to local console mock parsing.
 - **AES-Encryption At-Rest:** Private portfolio documentation is scrambled natively via cryptographic primitives.
 - **Global API Logging Middleware:** Custom NestJS HTTP middleware meticulously tags and tracks incoming payloads and routing durations.
 - **Database User Strictness:** Passwords are mathematically hashed via `bcrypt` natively. The platform actively scans the PostgreSQL configuration matrix to ensure accounts strictly flag `isActive: true` before yielding API scopes.
@@ -112,6 +113,17 @@ NODE_ENV="development"
 ENCRYPTION_KEY="0123456789abcdef0123456789abcdef" # MUST be strictly 32 bytes for AES-256!
 FRONTEND_URL="http://localhost:3000"
 JWT_EXPIRES_IN="60m"
+
+# OTP Generation Matrix
+OTP_LENGTH="6"
+OTP_TYPE="numeric"
+
+# Live SMTP Configurations (Optional for Testing)
+MAIL_HOST="smtp.example.com"
+MAIL_PORT="587"
+MAIL_USER="dev@yourdomain.com"
+MAIL_PASS="super_secret_smtp_password"
+MAIL_FROM="noreply@yourdomain.com"
 ```
 
 **Frontend (`apps/frontend/.env.local`)**

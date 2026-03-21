@@ -4,13 +4,14 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface CreatePortfolioFormProps {
-  onSubmit: (title: string, data: string) => Promise<void>;
+  onSubmit: (title: string, data: string, file: File | null) => Promise<void>;
   isLoading: boolean;
 }
 
 export default function CreatePortfolioForm({ onSubmit, isLoading }: CreatePortfolioFormProps) {
   const [title, setTitle] = useState('');
   const [data, setData] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -21,7 +22,7 @@ export default function CreatePortfolioForm({ onSubmit, isLoading }: CreatePortf
     }
     setError(null);
     try {
-      await onSubmit(title, data);
+      await onSubmit(title, data, file);
     } catch (err) {
       setError("Failed to upload portfolio. Connection error.");
     }
@@ -70,6 +71,19 @@ export default function CreatePortfolioForm({ onSubmit, isLoading }: CreatePortf
             placeholder="Introduce yourself or paste a standard format..."
             value={data}
             onChange={(e) => setData(e.target.value)}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="file" className="block text-xs uppercase tracking-wider text-gray-400 font-semibold ml-1">
+            Attach Secure Document (Optional)
+          </label>
+          <input
+            id="file"
+            type="file"
+            accept=".pdf,.doc,.docx"
+            className="w-full text-sm text-gray-400 file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-violet-500/10 file:text-violet-400 hover:file:bg-violet-500/20 file:transition-all cursor-pointer bg-white/5 border border-white/10 rounded-xl outline-none"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
           />
         </div>
 

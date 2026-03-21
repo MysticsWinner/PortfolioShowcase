@@ -4,6 +4,7 @@ import { UsersService } from '../users/users.service';
 import { ConfigService } from '@nestjs/config';
 import { compare } from 'bcrypt';
 import * as crypto from 'crypto';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -11,12 +12,13 @@ export class AuthService {
     private users: UsersService,
     private jwt: JwtService,
     private configService: ConfigService,
-  ) {}
+    private mailService: MailService,
+  ) { }
 
   private generateOtp(): { otp: string; expiresAt: Date } {
     const length = parseInt(this.configService.get<string>('OTP_LENGTH') || '6', 10);
     const type = this.configService.get<string>('OTP_TYPE') || 'numeric';
-    
+
     let chars = '0123456789';
     if (type === 'alphanumeric') {
       chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -63,7 +65,7 @@ export class AuthService {
     try {
       const { hash } = await import('bcrypt');
       const hashedPassword = await hash(pass, 10);
-      
+
       const { otp, expiresAt } = this.generateOtp();
 
       const user = await this.users.create({
@@ -75,11 +77,8 @@ export class AuthService {
         isActive: false,
       });
 
-      // MOCK EMAIL SENDING: Outputting raw OTP to the server console natively
-      console.log(`\n======================================`);
-      console.log(`📧 MOCK EMAIL DISPATCH TO: ${email}`);
-      console.log(`🔑 SECURE OTP CODE: ${otp}`);
-      console.log(`======================================\n`);
+      // SMTP Email Dispatch (or fallback to console gracefully internally)
+      await this.mailService.sendOtpEmail(email, otp, false);
 
       return { requiresVerification: true, email: user.email };
     } catch (e: any) {
@@ -94,7 +93,7 @@ export class AuthService {
   async verifyOtp(email: string, submittedOtp: string) {
     const user = await this.users.findByEmail(email);
     if (!user) throw new BadRequestException('Invalid verification attempt.');
-    
+
     if (user.isActive) {
       throw new BadRequestException('Account is already fully authorized.');
     }
@@ -135,10 +134,7 @@ export class AuthService {
       otpExpiresAt: expiresAt,
     });
 
-    console.log(`\n======================================`);
-    console.log(`🔁 MOCK RESEND DISPATCH TO: ${email}`);
-    console.log(`🔑 NEW SECURE OTP CODE: ${otp}`);
-    console.log(`======================================\n`);
+    await this.mailService.sendOtpEmail(email, otp, true);
 
     return { message: "New OTP actively dispatched." };
   }

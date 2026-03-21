@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { authApi } from "@/utils/api";
 
-export default function VerifyOTPPage() {
+function VerifyOTPContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
@@ -134,5 +134,17 @@ export default function VerifyOTPPage() {
         </div>
       </motion.div>
     </div>
+  );
+}
+
+export default function VerifyOTPPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center p-4">
+        <div className="text-cyan-400 animate-pulse text-lg tracking-widest uppercase">Decoupling Matrix...</div>
+      </div>
+    }>
+      <VerifyOTPContent />
+    </Suspense>
   );
 }

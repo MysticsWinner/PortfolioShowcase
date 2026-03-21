@@ -213,14 +213,14 @@ model ContactMessage {
  */
 
 model Portfolio {
-  id    String @id @default(uuid())
-  title String
-  data  String // Encrypted portfolio data
-  iv    String // Initialization vector for encryption
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id        String   @id @default(uuid())
+  title     String
+  data      String   // Encrypted content
+  iv        String   // Initialization vector for encryption
+  fileUrl   String?  // Physical disk address for binary uploads
+  fileType  String?  // MIME descriptor mapping (pdf, docx)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -1,6 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, BadRequestException, StreamableFile } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as crypto from 'crypto';
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import type { Response } from 'express';
 
 @Injectable()
 export class PortfoliosService {
@@ -68,5 +71,39 @@ export class PortfoliosService {
     return this.prisma.portfolio.delete({
       where: { id: portfolioId },
     });
+  }
+
+  async uploadPortfolioFile(userId: string, portfolioId: string, file: any) {
+    const portfolio = await this.prisma.portfolio.findUnique({ where: { id: portfolioId } });
+    if (!portfolio || portfolio.userId !== userId) {
+      throw new BadRequestException('Security Violation: Unauthorized Portfolio Modification.');
+    }
+
+    return this.prisma.portfolio.update({
+      where: { id: portfolioId },
+      data: {
+        fileUrl: file.filename, 
+        fileType: file.mimetype,
+      },
+    });
+  }
+
+  async downloadPortfolioFile(userId: string, portfolioId: string, res: Response) {
+    const portfolio = await this.prisma.portfolio.findUnique({ where: { id: portfolioId } });
+    if (!portfolio || portfolio.userId !== userId) {
+      throw new BadRequestException('Security Violation: Unauthorized Binary Access.');
+    }
+    if (!portfolio.fileUrl) {
+      throw new BadRequestException('No binary document attached to this portfolio.');
+    }
+
+    const fileStream = createReadStream(join(process.cwd(), 'uploads/portfolios', portfolio.fileUrl));
+    
+    res.set({
+      'Content-Type': portfolio.fileType || 'application/octet-stream',
+      'Content-Disposition': `attachment; filename="${portfolio.fileUrl}"`,
+    });
+
+    return new StreamableFile(fileStream);
   }
 }
