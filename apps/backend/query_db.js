@@ -3,7 +3,7 @@ const { PrismaPg } = require('@prisma/adapter-pg');
 const { Pool } = require('pg');
 
 async function main() {
-  const connectionString = process.env.DATABASE_URL || "postgresql://postgres:Tanmay%40123@localhost:5432/portfolio";
+  const connectionString = process.env.DATABASE_URL;
   const pool = new Pool({ connectionString });
   const adapter = new PrismaPg(pool);
   const prisma = new PrismaClient({ adapter });

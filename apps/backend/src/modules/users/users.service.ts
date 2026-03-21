@@ -20,9 +20,17 @@ export class UsersService {
     return this.prisma.user.create({
       data: {
         ...data,
-        isActive: false,
         roleId: viewerRole.id,
       },
+      include: { role: true },
+    });
+  }
+
+  update(id: string, data: any) {
+    return this.prisma.user.update({
+      where: { id },
+      data,
+      include: { role: true },
     });
   }
 }

@@ -24,8 +24,9 @@ export default function RegisterPage() {
     setLoading(true);
     try {
       const data = await authApi.register(name, email, password);
-      if (data.requiresConfirmation) {
-        setError('Registration successful! Please confirm your email before logging in.');
+      if (data.requiresConfirmation || data.requiresVerification) {
+        setLoading(true);
+        router.push(`/auth/verify?email=${encodeURIComponent(email)}`);
         return;
       }
       

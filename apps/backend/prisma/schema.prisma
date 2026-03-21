@@ -29,11 +29,13 @@ enum ProjectStatus {
  */
 
 model User {
-  id       String  @id @default(uuid())
-  name     String
-  email    String  @unique
-  password String
-  isActive Boolean @default(true)
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  password     String
+  isActive     Boolean   @default(false)
+  otp          String?
+  otpExpiresAt DateTime?
 
   roleId String
   role   Role   @relation(fields: [roleId], references: [id])

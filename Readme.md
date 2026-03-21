@@ -110,6 +110,8 @@ PORT=3001
 COOKIE_SECRET="generate_another_random_secret"
 NODE_ENV="development"
 ENCRYPTION_KEY="0123456789abcdef0123456789abcdef" # MUST be strictly 32 bytes for AES-256!
+FRONTEND_URL="http://localhost:3000"
+JWT_EXPIRES_IN="60m"
 ```
 
 **Frontend (`apps/frontend/.env.local`)**
@@ -126,23 +128,35 @@ cd apps/backend
 npx prisma db push
 ```
 
-### 4. Booting the Matrix
+### 4. Booting the Matrix (Single Command)
 
-Run the frontend and backend instances concurrently directly from their respective terminal windows:
+You no longer need to manually manage multiple terminal tabs or worry about stale services. The monorepo has been engineered with a robust execution script that autonomously hunts down and slaughters any rogue instances occupying ports `3000` & `3001` before dynamically launching both workspaces concurrently into a clean log stream.
 
-**Backend Terminal:**
+**From the Root Directory, simply run:**
+```bash
+npm start
+# OR: pnpm start
+```
+
+Visit `http://localhost:3000` to interact with the frontend interface. The backend API is synchronously listening on port `3001`!
+
+---
+
+## 🔬 System Utilities & Logging Metrics
+
+### The Database Demolition Script
+If you ever need to completely wipe the system state and start fresh (destroying all test users, mocked portfolios, and compromised tokens), you can invoke the integrated reset utility.
+
 ```bash
 cd apps/backend
-npm run start:dev
+npm run db:reset
 ```
+*Note: Executing this will violently drop all Postgres tables, rebuild the strict schema, and seamlessly auto-seed the foundational `admin@example.com` Root Administrator account natively.*
 
-**Frontend Terminal:**
-```bash
-cd apps/frontend
-npm run dev
-```
-
-Visit `http://localhost:3000` to interact with the frontend interface. The backend API is synchronously listening on port `3001`.
+### Asynchronous System Logs
+The NestJS backend doesn't just print colorful analytics to your terminal. It utilizes a non-blocking asynchronous streaming middleware to permanently append all HTTP network traffic into a flat `.log` file natively alongside your code.
+- Navigate to `apps/backend/system.log`
+- Every `[GET]`, `[POST]`, and `[PATCH]`, including timestamps, IP origins, and millisecond durations, will be physically recorded there!
 
 ---
 
