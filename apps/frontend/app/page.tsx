@@ -3,13 +3,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
+
+const HeroCanvas = dynamic(() => import('../components/HeroCanvas'), {
+  ssr: false,
+});
 
 export default function LandingPage() {
   return (
     <div className="min-h-[85vh] flex flex-col justify-center items-center text-center p-6 relative overflow-hidden">
-      {/* Background glowing orbs */}
+      {/* Background glowing orbs & 3D WebGL Canvas */}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/20 rounded-full blur-[120px] -z-10" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] -z-10" />
+      <HeroCanvas />
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}

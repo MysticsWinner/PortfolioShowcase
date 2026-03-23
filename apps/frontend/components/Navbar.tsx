@@ -22,7 +22,10 @@ export default function Navbar() {
       </Link>
       <div className="ml-auto flex gap-6 text-sm font-medium text-gray-300 items-center">
         <Link href="/" className="hover:text-white transition-colors">Home</Link>
-        <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+        <Link href="/about" className="hover:text-white transition-colors">About</Link>
+        <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
+        <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+        <Link href="/api/resume" target="_blank" className="text-violet-400 font-semibold hover:text-violet-300 transition-colors">Resume</Link>
         
         {user && (
           <>
@@ -30,9 +33,14 @@ export default function Navbar() {
             <Link href="/dashboard" className="hover:text-white transition-colors">Dashboard</Link>
             <Link href="/dashboard/portfolios" className="hover:text-white transition-colors">Portfolios</Link>
             {user.role?.type === 'ADMIN' && (
-              <Link href="/dashboard/admin" className="text-pink-400 font-bold hover:text-pink-300 transition-colors">
-                Admin Panel
-              </Link>
+              <>
+                <Link href="/dashboard/admin" className="text-pink-400 font-bold hover:text-pink-300 transition-colors">
+                  Admin Panel
+                </Link>
+                <Link href="/dashboard/cms" className="text-cyan-400 font-bold hover:text-cyan-300 transition-colors">
+                  CMS
+                </Link>
+              </>
             )}
           </>
         )}

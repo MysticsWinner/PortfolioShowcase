@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseInterceptors } from '@nestjs/common';
+import { CacheInterceptor } from '@nestjs/cache-manager';
 import { ProjectsService } from './projects.service';
 
 @Controller('projects')
@@ -6,6 +7,7 @@ export class ProjectsController {
   constructor(private projects: ProjectsService) {}
 
   @Get()
+  @UseInterceptors(CacheInterceptor)
   getPublic() {
     return this.projects.findPublic();
   }

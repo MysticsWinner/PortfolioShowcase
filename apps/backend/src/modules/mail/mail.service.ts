@@ -61,11 +61,51 @@ export class MailService {
     }
   }
 
+  async sendContactNotificationEmail(submitterName: string, submitterEmail: string, message: string) {
+    const from = this.configService.get<string>('MAIL_FROM') || 'noreply@yourdomain.com';
+    const adminEmail = this.configService.get<string>('ADMIN_EMAIL') || 'admin@example.com';
+
+    if (this.transporter) {
+      try {
+        await this.transporter.sendMail({
+          from: `"Portfolio Alerts" <${from}>`,
+          to: adminEmail,
+          subject: `New Contact Form Submission from ${submitterName}`,
+          text: `You have received a new contact submission.\n\nName: ${submitterName}\nEmail: ${submitterEmail}\nMessage:\n${message}`,
+          html: `
+            <div style="font-family: sans-serif; padding: 20px; background: #111; border-radius: 12px; max-width: 600px; margin: 0 auto; color: #fff; border: 1px solid #333;">
+              <h2 style="color: #38b2ac; border-bottom: 1px solid #333; padding-bottom: 10px;">New Contact Payload Intercepted</h2>
+              <p><strong>Name:</strong> ${submitterName}</p>
+              <p><strong>Email:</strong> <a href="mailto:${submitterEmail}" style="color: #06b6d4;">${submitterEmail}</a></p>
+              <div style="background: #222; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                <p style="white-space: pre-wrap; margin: 0; color: #ccc;">${message}</p>
+              </div>
+            </div>
+          `,
+        });
+        this.logger.log(`SMTP Contact Alert successfully dispatched to: ${adminEmail}`);
+      } catch (error) {
+        this.logger.error(`CRITICAL: SMTP routing rejected for contact alert. Falling back to Console.`);
+        this.fallbackContactConsoleLog(submitterName, submitterEmail, message);
+      }
+    } else {
+      this.fallbackContactConsoleLog(submitterName, submitterEmail, message);
+    }
+  }
+
   private fallbackConsoleLog(to: string, otp: string, isResend: boolean) {
     console.log(`\n======================================`);
     if (isResend) console.log(`🔁 MOCK RESEND DISPATCH TO: ${to}`);
     else console.log(`📧 MOCK EMAIL DISPATCH TO: ${to}`);
     console.log(`🔑 SECURE OTP CODE: ${otp}`);
+    console.log(`======================================\n`);
+  }
+
+  private fallbackContactConsoleLog(name: string, email: string, message: string) {
+    console.log(`\n======================================`);
+    console.log(`📬 MOCK CONTACT ALERT DISPATCH`);
+    console.log(`FROM: ${name} (${email})`);
+    console.log(`MESSAGE:\n${message}`);
     console.log(`======================================\n`);
   }
 }
