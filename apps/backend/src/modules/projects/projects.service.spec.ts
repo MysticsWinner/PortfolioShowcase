@@ -37,7 +37,7 @@ describe('ProjectsService', () => {
   describe('findPublic', () => {
     it('should return only public projects', async () => {
       const mockProjects = [{ id: 1, name: 'Project 1', visibility: Visibility.PUBLIC }];
-      prisma.project.findMany.mockResolvedValue(mockProjects as any);
+      (prisma.project.findMany as jest.Mock).mockResolvedValue(mockProjects as any);
 
       const result = await service.findPublic();
       expect(result).toEqual(mockProjects);
@@ -51,7 +51,7 @@ describe('ProjectsService', () => {
         { id: 1, name: 'Project 1', visibility: Visibility.PUBLIC },
         { id: 2, name: 'Project 2', visibility: Visibility.PRIVATE },
       ];
-      prisma.project.findMany.mockResolvedValue(mockProjects as any);
+      (prisma.project.findMany as jest.Mock).mockResolvedValue(mockProjects as any);
 
       const result = await service.findPrivate();
       expect(result).toEqual(mockProjects);
@@ -63,7 +63,7 @@ describe('ProjectsService', () => {
     it('should create a project', async () => {
       const dto = { name: 'New Project' };
       const createdProject = { id: 1, ...dto };
-      prisma.project.create.mockResolvedValue(createdProject as any);
+      (prisma.project.create as jest.Mock).mockResolvedValue(createdProject as any);
 
       const result = await service.create(dto);
       expect(result).toEqual(createdProject);

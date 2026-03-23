@@ -230,3 +230,18 @@ model Subscriber {
   email     String   @unique
   createdAt DateTime @default(now())
 }
+
+/**
+ * =======================
+ * ANALYTICS TRACKING
+ * =======================
+ */
+
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  eventName String
+  path      String?
+  visitorId String?
+  createdAt DateTime @default(now())
+}
+
