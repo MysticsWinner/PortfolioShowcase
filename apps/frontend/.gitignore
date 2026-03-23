@@ -26,6 +26,7 @@
 
 # log
 *.log
+*.log*
 
 # debug
 npm-debug.log*
