@@ -40,7 +40,7 @@ pnpm --filter frontend test:watch
 *Note: Depending on configuration, UI assertions aggressively validate accessibility (A11y) using WAI-ARIA tag bindings natively.*
 
 ### Next.js Node Assertions
-We bypass `process.env` pollution by spinning up isolated JSDOM workers. Ensure `NEXT_PUBLIC_API_URL=http://localhost:3001` is actively mocked during `beforeAll` stubs if testing external telemetry (like `/analytics/track`).
+We bypass `process.env` pollution by spinning up isolated JSDOM workers. Ensure `process.env.NEXT_PUBLIC_API_URL` is actively mocked via `beforeAll` stubs if testing external telemetry integrations (like `/analytics/track`).
 
 ---
 

@@ -1,8 +1,6 @@
 import { Injectable, BadRequestException, StreamableFile } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import * as crypto from 'crypto';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 import type { Response } from 'express';
 
 @Injectable()
@@ -82,9 +80,17 @@ export class PortfoliosService {
     return this.prisma.portfolio.update({
       where: { id: portfolioId },
       data: {
-        fileUrl: file.filename, 
+        fileName: file.originalname, 
+        fileData: file.buffer,
         fileType: file.mimetype,
       },
+      select: {
+        id: true,
+        title: true,
+        fileName: true,
+        fileType: true,
+        createdAt: true,
+      }
     });
   }
 
@@ -93,17 +99,15 @@ export class PortfoliosService {
     if (!portfolio || portfolio.userId !== userId) {
       throw new BadRequestException('Security Violation: Unauthorized Binary Access.');
     }
-    if (!portfolio.fileUrl) {
+    if (!portfolio.fileData) {
       throw new BadRequestException('No binary document attached to this portfolio.');
     }
 
-    const fileStream = createReadStream(join(process.cwd(), 'uploads/portfolios', portfolio.fileUrl));
-    
     res.set({
       'Content-Type': portfolio.fileType || 'application/octet-stream',
-      'Content-Disposition': `attachment; filename="${portfolio.fileUrl}"`,
+      'Content-Disposition': `attachment; filename="${portfolio.fileName || 'download'}"`,
     });
 
-    return new StreamableFile(fileStream);
+    return new StreamableFile(portfolio.fileData);
   }
 }

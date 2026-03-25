@@ -59,7 +59,7 @@ This project strictly follows a **Monorepo** convention managed entirely by **PN
 - **Dynamic PDF Rendering**: Convert HTML portfolio content automatically to aesthetically precise PDF snapshots executing off `@react-pdf/renderer` chunk pipelines.
 - **Native Embedded Telemetry**: Evades standard blocking filters via a fully custom `AnalyticsProvider` React boundary reporting transparently into a private Prisma schema model.
 - **Real-Time WebSockets**: Two-way interactive Live Chat bridging Next.js clients effortlessly to a highly sanitized NestJS Socket.io architecture.
-- **Dynamic File Processing**: Accepts physical file payload blocks (doc, pdf) using authenticated interceptors protecting private files.
+- **Permanent Binary Postgres Storage**: Replaces ephemeral disk storage with direct `Bytea` injections into the Neon PostgreSQL database, ensuring all uploaded PDF/DOCX resumes survive countless server restarts flawlessly.
 
 ---
 

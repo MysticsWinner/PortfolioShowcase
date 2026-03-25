@@ -10,11 +10,12 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const frontendUrl = configService.get<string>('FRONTEND_URL');
+  if (!frontendUrl) {
+    console.warn("WARNING: FRONTEND_URL is wildly undefined. CORS is restricting all cross-origin requests.");
+  }
+  
   app.enableCors({
-    origin: frontendUrl ? frontendUrl : [
-      'http://localhost:3000',
-      /\.vercel\.app$/,
-    ],
+    origin: frontendUrl || false,
     credentials: true,
   });
 

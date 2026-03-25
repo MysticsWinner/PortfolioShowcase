@@ -13,7 +13,7 @@ export default function LiveChatWidget() {
 
   useEffect(() => {
     if (isOpen && !socket) {
-      const newSocket = io(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001');
+      const newSocket = io(process.env.NEXT_PUBLIC_API_URL as string);
       
       newSocket.on('receiveMessage', (msg) => {
         setMessages((prev) => [...prev, msg]);

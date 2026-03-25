@@ -44,9 +44,9 @@ export default function PortfolioCard({ portfolio, onDelete, onDownload }: Portf
           {portfolio.data}
         </p>
 
-        {portfolio.fileUrl && (
+        {portfolio.fileName && (
           <button
-            onClick={() => onDownload?.(portfolio.id, "portfolio_document" + (portfolio.fileType?.includes('pdf') ? '.pdf' : '.docx'))}
+            onClick={() => onDownload?.(portfolio.id, portfolio.fileName || "portfolio_document.pdf")}
             className="mt-6 w-full py-2.5 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/20 rounded-xl text-violet-300 font-semibold text-sm transition-all flex items-center justify-center gap-2 group/btn"
           >
             <svg className="w-4 h-4 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

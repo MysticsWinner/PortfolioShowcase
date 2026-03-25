@@ -1,4 +1,4 @@
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { extname } from 'path';
 import { BadRequestException } from '@nestjs/common';
 import * as crypto from 'crypto';
@@ -15,12 +15,5 @@ export const multerConfig = {
       cb(new BadRequestException('CRITICAL: Unsupported file extension. Only .pdf, .doc, and .docx are permitted.'), false);
     }
   },
-  storage: diskStorage({
-    destination: './uploads/portfolios',
-    filename: (req, file, cb) => {
-      // Cryptographically obscure the original filename on disk to prevent exact-guessing
-      const randomName = crypto.randomBytes(16).toString('hex');
-      cb(null, `${randomName}${extname(file.originalname)}`);
-    },
-  }),
+  storage: memoryStorage(),
 };

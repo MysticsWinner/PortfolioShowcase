@@ -25,7 +25,21 @@ export default function Navbar() {
         <Link href="/about" className="hover:text-white transition-colors">About</Link>
         <Link href="/blog" className="hover:text-white transition-colors">Blog</Link>
         <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
-        <Link href="/api/resume" target="_blank" className="text-violet-400 font-semibold hover:text-violet-300 transition-colors">Resume</Link>
+        <a 
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            if (!user) {
+              alert("You must be logged in to view your dynamic resume.");
+              window.location.href = '/auth/login';
+            } else {
+              window.open(`/api/resume?name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`, '_blank');
+            }
+          }}
+          className="text-violet-400 font-semibold hover:text-violet-300 transition-colors"
+        >
+          Resume
+        </a>
         
         {user && (
           <>

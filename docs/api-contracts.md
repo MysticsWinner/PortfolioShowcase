@@ -21,10 +21,10 @@ To maintain strict predictability during integration builds across Workspaces, t
 ### Portfolio Storage & Document Operations 
 **Endpoint:** `POST /portfolios/:portfolioId/upload` <br/>
 **Headers:** `Content-Type: multipart/form-data`, `Authorization: Bearer <TOKEN>` <br/>
-**Action:** Decrypts natively attached Blob / File headers and stores the binary output persistently, binding it to the portfolio record via Prisma.
+**Action:** Catches `multipart/form-data` natively in RAM using `multer.memoryStorage()`, bypassing ephemeral server disks entirely, and injects the raw buffer securely into the permanent Neon PostgreSQL `Bytea` column.
 
 **Endpoint:** `GET /portfolios/:portfolioId/download` <br/>
-**Action:** Returns a safe `Blob` stream allowing the React frontend to natively write the file to the user's hard drive without redirecting them to a vulnerable direct URL.
+**Action:** Pulls the binary `Bytes` payload directly out of the Postgres database and returns a safe HTTP streaming `Blob` allowing the Next.js frontend to securely download the user's resume, completely immune to backend sleep/restart cycles.
 
 ### CMS Administrator Overrides
 **Endpoint:** `PATCH /admin/users/:userId/status` <br/>
@@ -36,8 +36,8 @@ To maintain strict predictability during integration builds across Workspaces, t
 
 ## 🔮 Suggested Planned Features (API Integration)
 
-1. **Swagger / OpenAPI Auto-Generation:** Implement `@nestjs/swagger` immediately to automatically decorate and compile these raw contracts into an interactive `http://localhost:3001/api/docs` viewer natively.
-2. **GraphQL Wrapping:** Implement Apollo Server over the NestJS topology allowing the Next.js `CMS` to run granular data fetches dynamically fetching only specific fields using GraphQL (reducing JSON payload bloat significantly).
+1. **Swagger / OpenAPI Auto-Generation:** Implement `@nestjs/swagger` immediately to automatically decorate and compile these raw contracts into an interactive `https://your-backend-url/api/docs` viewer natively.
+2. **GraphQL Wrapping:** Implement Apollo Server over the NestJS topology allowing the Next.js `CMS` to run granular data fetches dynamically fetching only specific fields using GraphQL.
 3. **Webhooks Outcast Engine:** Build an autonomous HTTP dispatcher that fires `POST` pulses to external platforms (Slack, Discord) whenever a visitor uses the `POST /contact` endpoint to send a message.
 
 [← Return to Master Plan](../Readme.md)

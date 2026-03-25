@@ -21,7 +21,7 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="max-w-4xl space-y-8"
+        className="max-w-4xl space-y-8 relative z-10 pointer-events-auto"
       >
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
           Showcase Your Best Work.

@@ -6,20 +6,20 @@ This document outlines the holistic architecture defining the **Portfolio Showca
 
 ## 🧭 Current State Architecture
 
-### 1. Monorepo Structural Philosophy
-The repository abandons traditional segmented Git modules in favor of an unyielding **PNPM Workspace** matrix.
-- `apps/frontend`: Governed by Next.js 14 executing on the cutting-edge App Router paradigm. Uses Turbopack for millisecond compilation limits.
-- `apps/backend`: A monolithic API presentation gateway powered strictly by NestJS 11. It exposes Controllers that interface safely with deeper service classes.
-- `packages/*` (Future scaffolding): Isolated cross-boundary typed interfaces and design tokens.
+### 1. Production Infrastructure Matrix
+The production application achieves maximum decoupled scale utilizing an advanced trifecta of modern hosting providers:
+- **Frontend (Vercel):** The Next.js 14 application binds directly to the Vercel Edge Network via native GitHub integrations. It automatically rebuilds on `main` branch pushes utilizing Turbopack.
+- **Backend (Render):** The NestJS monolithic telemetry & control service runs as a continuously bound `Node.js Web Service`.
+- **Database (Neon Serverless):** PostgreSQL operations reside in Neon's auto-scaling pooled network, allowing Prisma to execute zero-downtime schema pushes effortlessly.
 
 ### 2. NestJS Backend Topology
 - **Prisma Data Engine:** We bypass complex raw SQL injections by abstracting data through Prisma ORM mapping directly to PostgreSQL. Models include `User`, `Project`, `ExternalWork`, `Portfolio`, and `AnalyticsEvent`.
-- **Telemetry Interceptors:** A custom analytics endpoint dumps massive parallel hit payloads gracefully into PostgreSQL without freezing the thread using fast async `trackEvent()` bounds.
-- **WebSocket Tunnels:** Instantiated using `@nestjs/websockets` and `@nestjs/platform-socket.io`, creating an absolute bidirectional tunnel for Live Chat features entirely segregated from normal `http` TCP traffic.
+- **Telemetry Interceptors:** A custom analytics endpoint dumps massive parallel hit payloads gracefully into PostgreSQL silently.
+- **WebSocket Tunnels:** Instantiated using `@nestjs/websockets` for Live Chat features entirely segregated from normal `http` TCP traffic.
 
 ### 3. Next.js Frontend Philosophy
-- **Selective Rendering Boundaries:** The application utilizes React Server Components (RSC) everywhere possible, minimizing client-JS bloat. Explicit `"use client"` directives are limited strictly to interactive layouts (e.g., the globally lazy-loaded `HeroCanvas` WebGL component utilizing `@react-three/fiber`).
-- **Global Command Palette:** Intercepts `Cmd/Ctrl + K` inputs and leverages `cmdk` node utilities to hot-jump developers into private `/dashboard` or `/projects` route arrays.
+- **Selective Rendering Boundaries:** The application leverages strict Server Components natively. Explicit `"use client"` directives are limited strictly to interactive layouts (e.g., the globally lazy-loaded `HeroCanvas` WebGL component).
+- **Global Command Palette:** Intercepts `Cmd/Ctrl + K` inputs and leverages `cmdk` node utilities to hot-jump developers into private dashboards.
 - **Dynamic CSS Isolation:** Relies entirely on Tailwind CSS v4 to generate atomic utility classes securely at build-time.
 
 ---

@@ -15,7 +15,7 @@ export default function AnalyticsProvider() {
     }
 
     try {
-      fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/analytics/track`, {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/analytics/track`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -13,13 +13,14 @@ The repository is built as a highly interdependent **pnpm monorepo**. To ensure 
 1. **Checkout Repository**: Uses `actions/checkout@v4`.
 2. **Environment Restitution (Node & pnpm)**: 
    - Forces **Node.js 20** injection via `actions/setup-node@v4`.
-   - Injects **pnpm 10** natively via `pnpm/action-setup@v4`. This prevents catastrophic `ERR_PNPM_BAD_PM_VERSION` errors and strictly honors our `pnpm@10.27.0` signature located in `package.json`.
+   - Injects **pnpm 10** natively via `pnpm/action-setup@v4`. This strictly honors our `pnpm@10.27.0` signature located in `package.json`.
 3. **Workspace Installation**: Restores the `pnpm-lock.yaml` tree dynamically.
-4. **Database Scaffolding Guard**: Runs `pnpm --filter backend exec prisma generate`.
-   - *Why?:* GitHub Actions runners execute inside a fresh Ubuntu isolated slate. Because Prisma Client relies on generated types mapped to the disk, omitting this step causes strict TypeScript `nest build` compilations to fatally crash.
+4. **Database Scaffolding Guard**: Runs `pnpm --filter backend exec prisma generate` safely ensuring strong TypeScript mapping inside isolated Ubuntu Actions runners.
 5. **Backend Compilation & Testing**: Checks strict type compilations (NestJS) and executes the Jest suites securely.
-6. **Frontend Static Prerendering (SSG)**: Orchestrates `next build`.
-   - *Environment Injection:* The pipeline actively injects dummy placeholders for `NEXT_PUBLIC_API_URL` and `NEXT_PUBLIC_SITE_URL` during the frontend build. Next.js natively prerenders pages and would normally throw a `CRITICAL` error halting the pipeline if it detected missing variables inside `utils/api.ts`.
+6. **Frontend Static Prerendering (SSG)**: Orchestrates `next build` with dummy URL fallbacks to guarantee UI components correctly compile without breaking types.
+7. **CI/CD Deployment Forks:**
+   - **Frontend:** Handled completely externally natively by Vercel listening instantly to GitHub webhook pushes.
+   - **Backend:** Actions runs a conditional curl POST to our `RENDER_DEPLOY_HOOK` GitHub Secret instantly signaling the Render Cloud instance to auto-rebuild.
 
 ---
 

@@ -11,11 +11,11 @@ const styles = StyleSheet.create({
   boldText: { fontSize: 11, color: '#111', fontWeight: 'bold' }
 });
 
-const ResumeDocument = () => (
+const ResumeDocument = ({ name, email }: { name: string, email: string }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <Text style={styles.header}>Software Engineer</Text>
-      <Text style={styles.subheader}>john.doe@example.com | github.com/johndoe | yourdomain.com</Text>
+      <Text style={styles.header}>{name}</Text>
+      <Text style={styles.subheader}>{email}</Text>
       
       <View style={styles.section}>
         <Text style={styles.title}>Professional Summary</Text>
@@ -42,7 +42,15 @@ const ResumeDocument = () => (
 
 export async function GET(req: NextRequest) {
   try {
-    const stream = await renderToStream(<ResumeDocument />);
+    const { searchParams } = new URL(req.url);
+    const name = searchParams.get('name');
+    const email = searchParams.get('email');
+
+    if (!name || !email) {
+      return NextResponse.json({ error: 'Unauthorized. Missing authentication parameters.' }, { status: 401 });
+    }
+
+    const stream = await renderToStream(<ResumeDocument name={name} email={email} />);
     
     // Read the stream into a buffer for direct HTTP Transmission
     const chunks: Buffer[] = [];
