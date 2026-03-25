@@ -9,8 +9,12 @@ async function bootstrap() {
   app.use(helmet());
   const configService = app.get(ConfigService);
 
+  const frontendUrl = configService.get<string>('FRONTEND_URL');
   app.enableCors({
-    origin: configService.get<string>('FRONTEND_URL') || 'http://localhost:3000',
+    origin: frontendUrl ? frontendUrl : [
+      'http://localhost:3000',
+      /\.vercel\.app$/,
+    ],
     credentials: true,
   });
 
