@@ -148,6 +148,7 @@ To maintain focus and conciseness, large operational complexities have been extr
 👉 **Always read these manuals before extensively modifying architecture logic:**
 
 - **[🤖 CI/CD Pipeline Architecture](docs/ci-cd-pipeline.md):** Learn how our infallible automated GitHub Actions workflow strictly isolates backend compilation from Next.js Prerendering, handling TypeScript environment variables invisibly.
+- **[🚀 Production Deployment Guide](docs/deployment.md):** Step-by-step instructions detailing the exact Vercel, Render, and Neon PostgreSQL setup used to host this platform.
 - **[🧪 Comprehensive Testing Matrix](docs/testing.md):** Instruction manuals on strictly typing Jest integrations, mocking Prisma services perfectly, and generating holistic UI snapshots safely.
 - **[🧩 API Contracts](docs/api-contracts.md):** Data payloads and response body schematics mapping to the primary controllers.
 - **[🔐 Authentication Flow](docs/auth-flow.md):** Detailed JWT interception and storage logic preventing XSS token lifting.
