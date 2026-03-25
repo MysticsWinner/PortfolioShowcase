@@ -23,7 +23,7 @@ export default function ContactPage() {
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
     } catch (err) {
-      console.error(err);
+      console.error('[ContactPage Error]:', err);
       setStatus('error');
     }
   };

@@ -23,6 +23,10 @@ export default function LiveChatWidget() {
         setMessages((prev) => [...prev, { ...msg, sender: 'System' }]);
       });
 
+      newSocket.on('connect_error', (err) => {
+        console.error('[LiveChatWidget Socket Error]:', err.message);
+      });
+
       setSocket(newSocket);
     }
     

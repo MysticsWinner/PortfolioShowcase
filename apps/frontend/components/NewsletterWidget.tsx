@@ -28,6 +28,7 @@ export default function NewsletterWidget() {
       setMsg(data.message || 'Successfully subscribed!');
       setEmail('');
     } catch (err: any) {
+      console.error('[NewsletterWidget Error]:', err);
       setStatus('error');
       setMsg(err.message);
     }
