@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 // The Backend requires NEXT_PUBLIC_API_URL to be defined cleanly from .env.local
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-showcase-backend.onrender.com';
 
-if (!API_URL) {
-  throw new Error("CRITICAL: NEXT_PUBLIC_API_URL is undefined in your .env.local!");
+if (!process.env.NEXT_PUBLIC_API_URL && typeof window !== 'undefined') {
+  console.warn("WARNING: NEXT_PUBLIC_API_URL is undefined in your Build! Falling back to default.");
 }
 
 const apiClient = axios.create({
