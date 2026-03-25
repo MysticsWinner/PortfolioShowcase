@@ -55,7 +55,6 @@ jobs:
           else
             echo "No RENDER_DEPLOY_HOOK secret found. Skipping Render deployment."
           fi
-
   deploy-frontend:
     needs: build-and-test
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
@@ -84,3 +83,4 @@ jobs:
         env:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
