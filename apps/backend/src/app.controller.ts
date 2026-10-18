@@ -6,7 +6,21 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
+  getRoot() {
     return this.appService.getHello();
+  }
+
+  @Get('health')
+  getHealth() {
+    return this.appService.getHealth();
+  }
+
+  @Get('system/info')
+  getSystemInfo() {
+    return {
+      hosting: this.appService.getHostingInfo(),
+      timestamp: new Date().toISOString(),
+      uptimeSeconds: Math.floor(process.uptime()),
+    };
   }
 }

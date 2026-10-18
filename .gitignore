@@ -6,3 +6,5 @@ node_modules
 apps/generated/prisma
 .vercel
 .env*.local
+graphify-out/cache/
+

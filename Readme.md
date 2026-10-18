@@ -54,6 +54,7 @@ This project strictly follows a **Monorepo** convention managed entirely by **PN
 
 ## ⚡ Core Features
 
+- **Hardened Authentication & Retention Engine**: Multi-factor OTP email verification, dynamic user avatar/status display, self-healing `/auth/me` profile re-hydration, multi-tab state synchronization, and 30-day "Remember Me" session retention.
 - **CMS Command Center**: Secure generic `/dashboard/cms` routes allowing instant modifications to live Public Projects and Portfolios.
 - **Global Command Palette**: Instant navigation indexing powered securely by `cmdk` node module using `Cmd + K`.
 - **Dynamic PDF Rendering**: Convert HTML portfolio content automatically to aesthetically precise PDF snapshots executing off `@react-pdf/renderer` chunk pipelines.
@@ -91,8 +92,8 @@ This project strictly follows a **Monorepo** convention managed entirely by **PN
 
 ### 2. Immediate Cloning & Installation
 ```bash
-git clone https://github.com/your-username/portfolio-showcase.git
-cd portfolio-showcase
+git clone https://github.com/MysticsWinner/PortfolioShowcase.git
+cd PortfolioShowcase
 pnpm install
 ```
 
@@ -147,7 +148,8 @@ To maintain focus and conciseness, large operational complexities have been extr
 
 👉 **Always read these manuals before extensively modifying architecture logic:**
 
-- **[🤖 CI/CD Pipeline Architecture](docs/ci-cd-pipeline.md):** Learn how our infallible automated GitHub Actions workflow strictly isolates backend compilation from Next.js Prerendering, handling TypeScript environment variables invisibly.
+- **[📋 Requirements Matrix (20 FR & 20 NFR)](docs/requirements.md):** Comprehensive engineering specification containing 20 Functional Requirements and 20 Non-Functional Requirements covering security, latency, and resilience.
+- **[🤖 CI/CD Pipeline Architecture](docs/ci-cd-pipeline.md):** Learn how our automated GitHub Actions workflow strictly isolates backend compilation from Next.js Prerendering, handling TypeScript environment variables invisibly.
 - **[🚀 Production Deployment Guide](docs/deployment.md):** Step-by-step instructions detailing the exact Vercel, Render, and Neon PostgreSQL setup used to host this platform.
 - **[🧪 Comprehensive Testing Matrix](docs/testing.md):** Instruction manuals on strictly typing Jest integrations, mocking Prisma services perfectly, and generating holistic UI snapshots safely.
 - **[🧩 API Contracts](docs/api-contracts.md):** Data payloads and response body schematics mapping to the primary controllers.

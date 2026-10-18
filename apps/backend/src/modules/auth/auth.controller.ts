@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -24,4 +25,15 @@ export class AuthController {
   resendOtp(@Body() body: { email: string }) {
     return this.authService.resendOtp(body.email);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getProfile(@Req() req: any) {
+    if (!req.user) {
+      throw new UnauthorizedException('User session invalid or expired');
+    }
+    const { password, otp, otpExpiresAt, ...safeUser } = req.user;
+    return safeUser;
+  }
 }
+

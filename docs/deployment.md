@@ -48,14 +48,32 @@ The Next.js 14 frontend is deployed to Vercel, utilizing their highly optimized 
 
 ---
 
-## 4. Automated CI/CD Pipeline
+---
 
-This project includes a fully robust GitHub Actions workflow located in `.github/workflows/main.yml`.
+## 5. Render Cold-Start Failsafes & Production Resilience
 
-Whenever code is pushed to the `main` or `master` branch:
-1. **Validation:** It provisions Node.js & PNPM v10, strictly validating types, linting, and internal Jest testing suites across the monorepo.
-2. **Deployment:** 
-   - The Frontend is natively intercepted and deployed by Vercel's GitHub integration.
-   - The Backend deployment is triggered dynamically by GitHub Actions hitting your Render Deploy Hook URL securely.
+On Render free and low-cost tiers, backend containers spin down into idle/sleep mode after 15 minutes of inactivity. When a new request arrives, Render takes between 30 to 60 seconds to spin up the container and establish the database connection.
+
+To ensure production resilience, the application implements active multi-layer failsafes:
+
+### 1. Early Background Warm-Up Probe
+- As soon as the Next.js frontend mounts, `AuthProvider` dispatches a non-blocking background ping to `GET /health`.
+- If the Render instance is asleep, this initiates container boot sequence immediately before the user clicks to log in or create a portfolio.
+
+### 2. Cold-Start Detection & Exponential Backoff
+- The frontend Axios client (`apps/frontend/utils/api.ts`) is configured with a 75-second timeout and an intelligent response interceptor.
+- If Render returns `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`, or network connection drops during container spin-up, the client marks the backend as `waking` and automatically retries the request up to 3 times with exponential backoff (3.5s, 7s, 10.5s).
+
+### 3. User-Facing Diagnostics & Feedback (`BackendWarmupBanner`)
+- While Render is spinning up, a sleek glassmorphic banner appears informing the visitor of the cold start with a live elapsed second counter.
+- Requests do not fail abruptly with generic error messages; they queue and complete automatically as soon as Render responds.
+
+### 4. Hosting Environment Introspection
+- **Backend:** Detects `RENDER=true` or `RENDER_SERVICE_ID` and returns environment telemetry via `GET /health` and `GET /system/info`.
+- **Frontend:** Inspects client hostname and environment flags (`VERCEL=1`), rendering live infrastructure telemetry across the Footer, Dashboard, and diagnostic modal.
+
+---
+
+[← Return to Master Plan](../Readme.md) | [Requirements Matrix](requirements.md)
 
 *Note: You must set your Render Deploy Hook URL as `RENDER_DEPLOY_HOOK` within your GitHub Repository Secrets for the automated pipeline to trigger Render builds!*

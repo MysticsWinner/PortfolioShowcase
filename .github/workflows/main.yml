@@ -10,17 +10,28 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/test_db?schema=public"
+      JWT_SECRET: "ci-pipeline-secure-secret-key-32-characters"
+      PORT: 3001
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      CI: true
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10
 
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 20
-
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
+        cache: 'pnpm'
 
     - name: Install Dependencies
       run: pnpm install
@@ -36,9 +47,6 @@ jobs:
 
     - name: Build Frontend
       run: pnpm --filter frontend build
-      env:
-        NEXT_PUBLIC_API_URL: http://localhost:3001
-        NEXT_PUBLIC_SITE_URL: http://localhost:3000
 
     - name: Test Frontend
       run: pnpm --filter frontend test
@@ -51,7 +59,9 @@ jobs:
       - name: Trigger Render Deploy Hook
         run: |
           if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
-            curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+            echo "Dispatching deployment trigger to Render..."
+            curl -s -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+            echo "Render deploy hook successfully dispatched."
           else
             echo "No RENDER_DEPLOY_HOOK secret found. Skipping Render deployment."
           fi

@@ -4,11 +4,13 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { authApi } from "@/utils/api";
+import { useAuth } from "@/components/AuthProvider";
 
 function VerifyOTPContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
+  const { setSession } = useAuth();
 
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
@@ -38,12 +40,11 @@ function VerifyOTPContent() {
     try {
       const authPayload = await authApi.verifyOTP(email, otp);
       
-      // Verification Successful! Saving JWT properly.
-      localStorage.setItem("token", authPayload.accessToken);
-      localStorage.setItem("user", JSON.stringify(authPayload.user));
+      // Update central AuthContext & localStorage immediately
+      setSession(authPayload.accessToken, authPayload.user, true);
 
       setSuccess("Activation successful! Redirecting...");
-      setTimeout(() => router.push("/dashboard"), 1500);
+      setTimeout(() => router.push("/dashboard"), 1200);
     } catch (err: any) {
       setError(err.response?.data?.message || "Invalid OTP code. Please try again.");
     } finally {

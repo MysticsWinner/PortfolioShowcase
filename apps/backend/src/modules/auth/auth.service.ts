@@ -46,18 +46,24 @@ export class AuthService {
       }
 
       if (!user.isActive) {
-        throw new UnauthorizedException('ACCOUNT_NOT_VERIFIED');
+        throw new UnauthorizedException({
+          statusCode: 401,
+          message: 'ACCOUNT_NOT_VERIFIED',
+          email: user.email,
+        });
       }
 
       const payload = { sub: user.id, role: user.role?.type || 'VIEWER' };
+      const { password: _, otp: __, otpExpiresAt: ___, ...sanitizedUser } = user;
 
       return {
         accessToken: this.jwt.sign(payload),
-        user,
+        user: sanitizedUser,
       };
     } catch (e: any) {
-      if (e.name === 'UnauthorizedException') throw e;
-      return { message: "DEBUG_LOGIN_ERROR", error: e.stack || e.message };
+      if (e.name === 'UnauthorizedException' || e.status === 401) throw e;
+      const { InternalServerErrorException } = await import('@nestjs/common');
+      throw new InternalServerErrorException('Authentication service temporarily unavailable. Please try again.');
     }
   }
 
@@ -114,11 +120,12 @@ export class AuthService {
     });
 
     const payload = { sub: activatedUser.id, role: activatedUser.role?.type || 'VIEWER' };
+    const { password: _, otp: __, otpExpiresAt: ___, ...sanitizedUser } = activatedUser;
 
     return {
       message: "Verification successful!",
       accessToken: this.jwt.sign(payload),
-      user: activatedUser,
+      user: sanitizedUser,
     };
   }
 

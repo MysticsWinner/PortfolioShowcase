@@ -80,7 +80,8 @@ describe('AuthService', () => {
       jwtService.sign.mockReturnValue('mockToken');
 
       const result = await service.login('test@test.com', 'password');
-      expect(result).toEqual({ accessToken: 'mockToken', user: mockUser });
+      const { password: _, ...expectedUser } = mockUser;
+      expect(result).toEqual({ accessToken: 'mockToken', user: expectedUser });
     });
   });
 
@@ -106,10 +107,11 @@ describe('AuthService', () => {
 
       const result = await service.verifyOtp('test@test.com', '123456');
       
+      const { password: _, otp: __, otpExpiresAt: ___, ...expectedUpdatedUser } = updatedUser;
       expect(result).toEqual({
         message: 'Verification successful!',
         accessToken: 'mockToken',
-        user: updatedUser,
+        user: expectedUpdatedUser,
       });
       expect(usersService.update).toHaveBeenCalledWith(1, { isActive: true, otp: null, otpExpiresAt: null });
     });

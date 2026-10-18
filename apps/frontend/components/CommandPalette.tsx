@@ -72,6 +72,9 @@ export default function CommandPalette() {
                 </Command.Group>
 
                 <Command.Group heading="System" className="text-xs font-semibold text-gray-500 px-2 py-2 border-t border-white/5 mt-2">
+                  <Command.Item onSelect={() => runCommand(() => window.open('https://github.com/MysticsWinner/PortfolioShowcase', '_blank'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
+                    <Terminal className="w-4 h-4 mr-3 text-violet-400" /> View Source on GitHub (MysticsWinner/PortfolioShowcase)
+                  </Command.Item>
                   <Command.Item onSelect={() => runCommand(() => router.push('/dashboard/admin'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
                     <Shield className="w-4 h-4 mr-3 text-red-400" /> Admin Dashboard
                   </Command.Item>

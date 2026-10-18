@@ -5,6 +5,8 @@ import Footer from '../components/Footer';
 import LiveChatWidget from '../components/LiveChatWidget';
 import AnalyticsProvider from '../components/AnalyticsProvider';
 import CommandPalette from '../components/CommandPalette';
+import { AuthProvider } from '../components/AuthProvider';
+import BackendWarmupBanner from '../components/BackendWarmupBanner';
 
 export const metadata: Metadata = {
   title: 'Portfolio Showcase | Software Engineer',
@@ -27,12 +29,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
-        <AnalyticsProvider />
-        <CommandPalette />
-        <Navbar />
-        {children}
-        <LiveChatWidget />
-        <Footer />
+        <AuthProvider>
+          <AnalyticsProvider />
+          <CommandPalette />
+          <Navbar />
+          {children}
+          <LiveChatWidget />
+          <BackendWarmupBanner />
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

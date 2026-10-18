@@ -74,7 +74,7 @@ export default function AboutPage() {
             This project is open-source and internally distributed. You can find the complete implementation details, codebase architecture, and deployment instructions hosted directly on GitHub.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="https://github.com/your-repo/portfolio-showcase" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-colors">
+            <a href="https://github.com/MysticsWinner/PortfolioShowcase" target="_blank" rel="noopener noreferrer" className="inline-block px-8 py-3 bg-white/10 border border-white/20 text-white font-bold rounded-full hover:bg-white/20 transition-colors">
               View Repository
             </a>
             <a href="/auth/register" className="inline-block px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors shadow-[0_0_30px_rgba(255,255,255,0.2)]">

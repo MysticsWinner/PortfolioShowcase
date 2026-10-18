@@ -18,6 +18,9 @@ import { NewsletterModule } from './modules/newsletter/newsletter.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -39,7 +42,9 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
       limit: 100,
     }]),
   ],
+  controllers: [AppController],
   providers: [
+    AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
