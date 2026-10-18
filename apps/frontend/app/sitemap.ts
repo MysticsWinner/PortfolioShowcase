@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
+  const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.awesomeprojects.in').replace(/\/+$/, '')
   
   // Base Routes
   const routes = [
