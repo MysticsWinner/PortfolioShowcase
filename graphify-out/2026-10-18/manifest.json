@@ -132,9 +132,9 @@
     "semantic_hash": ""
   },
   "apps/backend/src/modules/auth/auth.service.spec.ts": {
-    "mtime": 1792318811.4746802,
-    "seen": 1792319259.5483692,
-    "ast_hash": "01700191875ea61f0c3aed9200d891cd",
+    "mtime": 1792324695.758171,
+    "seen": 1792324825.8017497,
+    "ast_hash": "aa94af7351071148e20c324f6f2971c7",
     "semantic_hash": ""
   },
   "apps/backend/src/modules/auth/auth.service.ts": {
@@ -618,9 +618,9 @@
     "semantic_hash": ""
   },
   "package.json": {
-    "mtime": 1774060481.0,
-    "seen": 1792319259.5485015,
-    "ast_hash": "a56065d0477a0f250e97c7f9d77d43c8",
+    "mtime": 1792324177.5670922,
+    "seen": 1792324825.8019385,
+    "ast_hash": "738ba41c970b20a39cad2e6eec87841a",
     "semantic_hash": ""
   },
   "packages/shared/package.json": {
@@ -660,9 +660,9 @@
     "semantic_hash": ""
   },
   ".github/workflows/main.yml": {
-    "mtime": 1774476929.0,
-    "seen": 1792319259.5485127,
-    "ast_hash": "47eef6462bfe73f31e408495e70d3e52",
+    "mtime": 1792324792.3041224,
+    "seen": 1792324825.8019536,
+    "ast_hash": "40b575bbd7c93f455fa7badaa509b415",
     "semantic_hash": ""
   },
   "Readme.md": {
@@ -753,6 +753,12 @@
     "mtime": 1792323862.8363786,
     "seen": 1792324018.1215374,
     "ast_hash": "1c95cadc56772d6cf2450c369da5463e",
+    "semantic_hash": ""
+  },
+  "apps/frontend/declarations.d.ts": {
+    "mtime": 1792324513.5364802,
+    "seen": 1792324825.801916,
+    "ast_hash": "cf2b26787e1e525a171c58431ff68f20",
     "semantic_hash": ""
   }
 }

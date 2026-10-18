@@ -1,55 +1,58 @@
 # Graph Report - PortfolioShowcase  (2026-10-18)
 
 ## Corpus Check
-- 124 files · ~27,465 words
+- 124 files · ~27,459 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 6, .prisma 1, .css 1)
 
 ## Summary
-- 845 nodes · 1255 edges · 66 communities (42 shown, 24 thin omitted)
+- 844 nodes · 1254 edges · 74 communities (49 shown, 25 thin omitted)
 - Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 46 edges (avg confidence: 0.88)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c6925457`
+- Built from commit: `ab680e9b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - AuthProvider.tsx
-- AuthController
+- AuthService
 - ⚡ 20 Functional Requirements (FR)
 - backend/package.json
-- prisma.service.ts
+- reset-db.js
 - package.json
 - devDependencies
 - admin.controller.ts
 - dependencies
-- portfolios.controller.ts
+- PortfoliosService
 - frontend/package.json
 - compilerOptions
 - blog/page.tsx
-- middleware.ts
+- @nestjs/common
 - compilerOptions
 - AnalyticsService
 - devDependencies
 - declarations.d.ts
-- PrismaService
+- AppService
 - scripts
 - api.ts
 - dependencies
-- @nestjs/common
+- app.module.ts
 - react
-- next
+- app/layout.tsx
 - 📡 Current State API Mapping
 - shared/package.json
 - backend/README.md
+- PrismaService
+- ProjectsService
 - jest
 - ChatGateway
 - ⚡ Core Upgraded Capabilities
 - Readme.md
 - Comprehensive Testing Strategy 🧪
 - nest-cli.json
+- newsletter.module.ts
 - scripts
 - 5. Render Cold-Start Failsafes & Production Resilience
 - 🗺️ Master Strategic Roadmap
@@ -58,7 +61,7 @@
 - route.tsx
 - Master Pipeline Architecture (CI/CD) ⚙️
 - seed_db.py
-- main.ts
+- AppModule
 - tsconfig.build.json
 - frontend/eslint.config.mjs
 - frontend/README.md
@@ -68,9 +71,14 @@
 - postcss.config.mjs
 - setup_env.sh
 - rust-cli
-- jest.config.ts
+- MailService
+- next
 - portfolios/page.tsx
+- contact.module.ts
 - HeroCanvas.tsx
+- auth.service.ts
+- verify/page.tsx
+- main.ts
 
 ## God Nodes (most connected - your core abstractions)
 1. `@nestjs/common` - 44 edges
@@ -89,33 +97,37 @@
   docs/requirements.md → apps/frontend/components/AnalyticsProvider.tsx
 - `⚡ Core Features` --references--> `AnalyticsProvider()`  [INFERRED]
   Readme.md → apps/frontend/components/AnalyticsProvider.tsx
+- `2. Multi-Tab Session Synchronization` --references--> `AuthProvider()`  [INFERRED]
+  docs/auth-flow.md → apps/frontend/components/AuthProvider.tsx
 - `1. Early Background Warm-Up Probe` --references--> `AuthProvider()`  [INFERRED]
   docs/deployment.md → apps/frontend/components/AuthProvider.tsx
-- `3. Next.js Frontend Philosophy` --references--> `HeroCanvas()`  [INFERRED]
-  docs/architecture.md → apps/frontend/components/HeroCanvas.tsx
-- `🔮 Suggested Planned Features (Architecture)` --references--> `AnalyticsService`  [INFERRED]
-  docs/architecture.md → apps/backend/src/modules/analytics/analytics.service.ts
+- `FR-05: Dynamic User Identity, Status & Avatar Presentation` --references--> `AuthProvider()`  [INFERRED]
+  docs/requirements.md → apps/frontend/components/AuthProvider.tsx
 
 ## Import Cycles
 - None detected.
 
-## Communities (66 total, 24 thin omitted)
+## Communities (74 total, 25 thin omitted)
 
 ### Community 0 - "AuthProvider.tsx"
 Cohesion: 0.24
-Nodes (11): LoginForm(), LoginPage(), VerifyOTPContent(), VerifyOTPPage(), DashboardLayout(), DashboardPage(), AdminSidebar(), AuthContext (+3 more)
+Nodes (11): LoginForm(), LoginPage(), DashboardLayout(), DashboardPage(), AdminSidebar(), AuthContext, AuthContextType, useAuth() (+3 more)
+
+### Community 1 - "AuthService"
+Cohesion: 0.13
+Nodes (3): AuthController, AuthService, UsersService
 
 ### Community 2 - "⚡ 20 Functional Requirements (FR)"
 Cohesion: 0.07
-Nodes (27): ⚡ 20 Functional Requirements (FR), 🛡️ 20 Non-Functional Requirements (NFR), 🎯 Architectural Overview, 📋 Comprehensive Requirements Specification Matrix, FR-01: Multi-Factor & OTP Email Account Verification, FR-02: Self-Healing Profile Re-hydration & Session Heartbeat (`GET /auth/me`), FR-03: Stateful Remember-Me Session Retention & Cross-Tab State Sync, FR-04: Graceful Post-Authentication Return URL Redirection (+19 more)
+Nodes (28): ⚡ 20 Functional Requirements (FR), 🛡️ 20 Non-Functional Requirements (NFR), 🎯 Architectural Overview, 📋 Comprehensive Requirements Specification Matrix, FR-01: Multi-Factor & OTP Email Account Verification, FR-02: Self-Healing Profile Re-hydration & Session Heartbeat (`GET /auth/me`), FR-03: Stateful Remember-Me Session Retention & Cross-Tab State Sync, FR-04: Graceful Post-Authentication Return URL Redirection (+20 more)
 
 ### Community 3 - "backend/package.json"
 Cohesion: 0.05
-Nodes (37): author, description, eslint, jest, passport, passport-jwt, prisma, ts-node (+29 more)
+Nodes (38): author, description, eslint, jest, passport, passport-jwt, prisma, ts-node (+30 more)
 
-### Community 4 - "prisma.service.ts"
-Cohesion: 0.06
-Nodes (19): { Pool }, { PrismaClient }, { PrismaPg }, bcrypt, { execSync }, { Pool }, { PrismaClient }, { PrismaPg } (+11 more)
+### Community 4 - "reset-db.js"
+Cohesion: 0.11
+Nodes (14): { Pool }, { PrismaClient }, { PrismaPg }, bcrypt, { execSync }, { Pool }, { PrismaClient }, { PrismaPg } (+6 more)
 
 ### Community 5 - "package.json"
 Cohesion: 0.07
@@ -126,16 +138,12 @@ Cohesion: 0.07
 Nodes (30): devDependencies, eslint, eslint-config-prettier, @eslint/eslintrc, @eslint/js, eslint-plugin-prettier, globals, jest (+22 more)
 
 ### Community 7 - "admin.controller.ts"
-Cohesion: 0.09
-Nodes (7): AdminController, AdminModule, AdminService, BackupService, Roles(), RolesGuard, @nestjs/core
+Cohesion: 0.08
+Nodes (8): AdminController, AdminModule, AdminService, BackupService, Roles(), RolesGuard, @nestjs/core, @nestjs/schedule
 
 ### Community 8 - "dependencies"
 Cohesion: 0.08
 Nodes (26): dependencies, bcrypt, cache-manager, cookie-parser, helmet, multer, @nestjs/cache-manager, @nestjs/common (+18 more)
-
-### Community 9 - "portfolios.controller.ts"
-Cohesion: 0.09
-Nodes (5): PortfoliosController, multerConfig, PortfoliosService, multer, @nestjs/platform-express
 
 ### Community 10 - "frontend/package.json"
 Cohesion: 0.08
@@ -146,8 +154,12 @@ Cohesion: 0.09
 Nodes (22): compilerOptions, allowSyntheticDefaultImports, baseUrl, declaration, emitDecoratorMetadata, esModuleInterop, experimentalDecorators, forceConsistentCasingInFileNames (+14 more)
 
 ### Community 12 - "blog/page.tsx"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (9): LoggerMiddleware, BlogPage(), getPostMetadata(), PostMetadata, BlogPost(), generateMetadata(), getPostContent(), NewsletterWidget() (+1 more)
+
+### Community 13 - "@nestjs/common"
+Cohesion: 0.20
+Nodes (6): JwtAuthGuard, multerConfig, PrismaModule, multer, @nestjs/common, @nestjs/platform-express
 
 ### Community 14 - "compilerOptions"
 Cohesion: 0.11
@@ -161,33 +173,33 @@ Nodes (8): AnalyticsController, AnalyticsModule, AnalyticsService, 1. Production
 Cohesion: 0.12
 Nodes (16): devDependencies, eslint, eslint-config-next, jest, jest-environment-jsdom, tailwindcss, @tailwindcss/postcss, @testing-library/dom (+8 more)
 
-### Community 18 - "PrismaService"
-Cohesion: 0.07
-Nodes (9): AppController, AppService, HealthResponse, HostingInfo, JwtStrategy, NewsletterController, NewsletterModule, NewsletterService (+1 more)
+### Community 18 - "AppService"
+Cohesion: 0.19
+Nodes (4): AppController, AppService, HealthResponse, HostingInfo
 
 ### Community 19 - "scripts"
 Cohesion: 0.14
 Nodes (14): scripts, build, db:reset, format, lint, start, start:debug, start:dev (+6 more)
 
 ### Community 20 - "api.ts"
-Cohesion: 0.11
-Nodes (18): BackendWarmupBanner(), adminApi, API_URL, apiClient, authApi, BackendState, BackendStatus, currentBackendState (+10 more)
+Cohesion: 0.13
+Nodes (16): BackendWarmupBanner(), adminApi, API_URL, apiClient, BackendState, BackendStatus, currentBackendState, getFrontendHostInfo() (+8 more)
 
 ### Community 21 - "dependencies"
 Cohesion: 0.14
 Nodes (14): dependencies, cmdk, gray-matter, lucide-react, maath, next, react, react-dom (+6 more)
 
-### Community 22 - "@nestjs/common"
-Cohesion: 0.06
-Nodes (21): AuthModule, AuthService, JwtAuthGuard, ChatModule, ContactController, ContactModule, ContactService, MailModule (+13 more)
+### Community 22 - "app.module.ts"
+Cohesion: 0.15
+Nodes (7): AuthModule, ChatModule, MailModule, PortfoliosModule, ProjectsModule, UsersModule, @nestjs/cache-manager
 
 ### Community 23 - "react"
 Cohesion: 0.19
 Nodes (7): NewPortfolioPage(), HeroCanvas, LandingPage(), CreatePortfolioForm(), CreatePortfolioFormProps, framer-motion, react
 
-### Community 24 - "next"
-Cohesion: 0.15
-Nodes (12): metadata, RootLayout(), AnalyticsProvider(), AuthProvider(), CommandPalette(), Footer(), LiveChatWidget(), Navbar() (+4 more)
+### Community 24 - "app/layout.tsx"
+Cohesion: 0.25
+Nodes (7): metadata, RootLayout(), AnalyticsProvider(), AuthProvider(), CommandPalette(), Footer(), LiveChatWidget()
 
 ### Community 25 - "📡 Current State API Mapping"
 Cohesion: 0.18
@@ -201,17 +213,21 @@ Nodes (10): author, description, keywords, license, main, name, packageManager, 
 Cohesion: 0.20
 Nodes (9): Compile and run the project, Deployment, Description, License, Project setup, Resources, Run tests, Stay in touch (+1 more)
 
+### Community 28 - "PrismaService"
+Cohesion: 0.17
+Nodes (4): JwtStrategy, PrismaService, @nestjs/passport, @prisma/client
+
 ### Community 30 - "jest"
 Cohesion: 0.22
 Nodes (9): jest, collectCoverageFrom, coverageDirectory, moduleFileExtensions, rootDir, testEnvironment, testRegex, transform (+1 more)
 
 ### Community 32 - "⚡ Core Upgraded Capabilities"
 Cohesion: 0.22
-Nodes (9): 1. Self-Healing Profile Re-hydration (`GET /auth/me`), 3. Stateful Remember-Me Persistence, 4. Post-Authentication Return URL Retention, 5. Unverified Account Interception & Resend OTP Recovery Flow, 6. Dynamic User Presentation & Role Badging, 🔐 Authentication Flow, Session Retention & Cryptography, ⚡ Core Upgraded Capabilities, 🔮 Suggested Planned Features (Authentication Security) (+1 more)
+Nodes (9): 1. Self-Healing Profile Re-hydration (`GET /auth/me`), 2. Multi-Tab Session Synchronization, 3. Stateful Remember-Me Persistence, 4. Post-Authentication Return URL Retention, 5. Unverified Account Interception & Resend OTP Recovery Flow, 🔐 Authentication Flow, Session Retention & Cryptography, ⚡ Core Upgraded Capabilities, 🔮 Suggested Planned Features (Authentication Security) (+1 more)
 
 ### Community 33 - "Readme.md"
-Cohesion: 0.28
-Nodes (5): 🏗️ Architectural Topography, ⚡ Core Features, 📚 Dedicated Documentation Directory, 📑 Master Table of Contents, 🛠️ Technology Ecosystem
+Cohesion: 0.22
+Nodes (7): 🏗️ Architectural Topography, ⚡ Core Features, 📚 Dedicated Documentation Directory, 📑 Master Table of Contents, 🛑 Problem & Impact Statement, 🛠️ Technology Ecosystem, The Impact Metrics
 
 ### Community 34 - "Comprehensive Testing Strategy 🧪"
 Cohesion: 0.29
@@ -221,13 +237,17 @@ Nodes (6): Comprehensive Testing Strategy 🧪, 📊 Coverage Guidelines, Mockin
 Cohesion: 0.33
 Nodes (5): collection, compilerOptions, deleteOutDir, $schema, sourceRoot
 
+### Community 36 - "newsletter.module.ts"
+Cohesion: 0.19
+Nodes (3): NewsletterController, NewsletterModule, NewsletterService
+
 ### Community 37 - "scripts"
 Cohesion: 0.33
 Nodes (6): scripts, build, dev, lint, start, test
 
 ### Community 38 - "5. Render Cold-Start Failsafes & Production Resilience"
-Cohesion: 0.25
-Nodes (8): 1. Database Provisioning (Neon), 1. Early Background Warm-Up Probe, 2. Backend Deployment (Render), 2. Cold-Start Detection & Exponential Backoff, 3. Frontend Deployment (Vercel), 4. Hosting Environment Introspection, 5. Render Cold-Start Failsafes & Production Resilience, 🚀 Production Deployment Guide
+Cohesion: 0.22
+Nodes (9): 1. Database Provisioning (Neon), 1. Early Background Warm-Up Probe, 2. Backend Deployment (Render), 2. Cold-Start Detection & Exponential Backoff, 3. Frontend Deployment (Vercel), 3. User-Facing Diagnostics & Feedback (`BackendWarmupBanner`), 4. Hosting Environment Introspection, 5. Render Cold-Start Failsafes & Production Resilience (+1 more)
 
 ### Community 39 - "🗺️ Master Strategic Roadmap"
 Cohesion: 0.33
@@ -249,9 +269,9 @@ Nodes (4): GET(), ResumeDocument(), styles, @react-pdf/renderer
 Cohesion: 0.40
 Nodes (4): Core Pipeline Sequence, Master Pipeline Architecture (CI/CD) ⚙️, 🛠️ Modifying the Pipeline, 🏗️ Overview
 
-### Community 47 - "main.ts"
-Cohesion: 0.20
-Nodes (5): AppModule, cookie-parser, helmet, @nestjs/testing, supertest
+### Community 47 - "AppModule"
+Cohesion: 0.33
+Nodes (3): AppModule, @nestjs/testing, supertest
 
 ### Community 48 - "tsconfig.build.json"
 Cohesion: 0.50
@@ -261,33 +281,49 @@ Nodes (3): exclude, extends, ./tsconfig.json
 Cohesion: 0.50
 Nodes (3): Deploy on Vercel, Getting Started, Learn More
 
+### Community 67 - "next"
+Cohesion: 0.17
+Nodes (5): config, config, createJestConfig, nextConfig, next
+
 ### Community 68 - "portfolios/page.tsx"
 Cohesion: 0.39
 Nodes (6): PortfoliosPage(), PortfolioCard(), PortfolioCardProps, Portfolio, portfolioApi, 2. NestJS Backend Topology
 
+### Community 69 - "contact.module.ts"
+Cohesion: 0.31
+Nodes (3): ContactController, ContactModule, ContactService
+
 ### Community 70 - "HeroCanvas.tsx"
-Cohesion: 0.29
-Nodes (7): HeroCanvas(), StarMesh(), FR-19: Dynamic Interactive WebGL Canvas with Device-Adaptive Performance, 🛑 Problem & Impact Statement, The Impact Metrics, @react-three/drei, @react-three/fiber
+Cohesion: 0.40
+Nodes (5): HeroCanvas(), StarMesh(), FR-19: Dynamic Interactive WebGL Canvas with Device-Adaptive Performance, @react-three/drei, @react-three/fiber
+
+### Community 71 - "auth.service.ts"
+Cohesion: 0.39
+Nodes (3): bcrypt, @nestjs/config, @nestjs/jwt
+
+### Community 72 - "verify/page.tsx"
+Cohesion: 0.40
+Nodes (3): VerifyOTPContent(), VerifyOTPPage(), authApi
 
 ## Knowledge Gaps
 - **52 isolated node(s):** `@nestjs/platform-socket.io`, `@types/nodemailer`, `cache-manager`, `passport`, `passport-jwt` (+47 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 474 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
-- **24 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **25 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `@nestjs/common` connect `@nestjs/common` to `backend/package.json`, `prisma.service.ts`, `admin.controller.ts`, `portfolios.controller.ts`, `blog/page.tsx`, `AnalyticsService`, `main.ts`, `PrismaService`, `chat.gateway.ts`?**
+- **Why does `@nestjs/common` connect `@nestjs/common` to `AuthService`, `backend/package.json`, `newsletter.module.ts`, `contact.module.ts`, `admin.controller.ts`, `auth.service.ts`, `blog/page.tsx`, `AnalyticsService`, `AppModule`, `AppService`, `chat.gateway.ts`, `app.module.ts`, `PrismaService`?**
   _High betweenness centrality (0.278) - this node is a cross-community bridge._
 - **What connects `@nestjs/platform-socket.io`, `@types/nodemailer`, `cache-manager` to the rest of the system?**
   _52 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `AuthService` be split into smaller, more focused modules?**
+  _Cohesion score 0.12535612535612536 - nodes in this community are weakly interconnected._
+- **Why does `next` connect `next` to `AuthProvider.tsx`, `portfolios/page.tsx`, `verify/page.tsx`, `frontend/package.json`, `route.tsx`, `blog/page.tsx`, `react`, `app/layout.tsx`?**
+  _High betweenness centrality (0.138) - this node is a cross-community bridge._
 - **Should `⚡ 20 Functional Requirements (FR)` be split into smaller, more focused modules?**
-  _Cohesion score 0.07407407407407407 - nodes in this community are weakly interconnected._
-- **Why does `next` connect `next` to `AuthProvider.tsx`, `jest.config.ts`, `portfolios/page.tsx`, `frontend/package.json`, `route.tsx`, `blog/page.tsx`, `middleware.ts`, `api.ts`, `react`?**
-  _High betweenness centrality (0.137) - this node is a cross-community bridge._
-- **Should `backend/package.json` be split into smaller, more focused modules?**
-  _Cohesion score 0.05263157894736842 - nodes in this community are weakly interconnected._
-- **Why does `@nestjs/jwt` connect `@nestjs/common` to `package.json`?**
+  _Cohesion score 0.07142857142857142 - nodes in this community are weakly interconnected._
+- **Why does `@nestjs/jwt` connect `auth.service.ts` to `package.json`, `app.module.ts`?**
   _High betweenness centrality (0.081) - this node is a cross-community bridge._
-- **Should `prisma.service.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.06183574879227053 - nodes in this community are weakly interconnected._
+- **Should `backend/package.json` be split into smaller, more focused modules?**
+  _Cohesion score 0.05128205128205128 - nodes in this community are weakly interconnected._
