@@ -1,7 +1,7 @@
 # Graph Report - PortfolioShowcase  (2026-10-24)
 
 ## Corpus Check
-- 136 files · ~48,462 words
+- 136 files · ~48,784 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 9 file(s) not represented in the graph (top: (none) 6, .prisma 1, .css 1)
 

@@ -201,6 +201,9 @@ export default function ProjectsPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
             <span>Import from Resume</span>
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/30">
+              WIP
+            </span>
           </button>
 
           <button
@@ -610,10 +613,14 @@ export default function ProjectsPage() {
         )}
       </AnimatePresence>
 
-      {/* Zero-Compute Client-Side Resume & Project Scanner Modal */}
+      {/* Zero-Compute Client-Side Resume & Project Scanner Modal (Work In Progress) */}
       <ResumeImportModal
         isOpen={isResumeModalOpen}
         onClose={() => setIsResumeModalOpen(false)}
+        onOpenManualCreate={() => {
+          setIsResumeModalOpen(false);
+          openCreateModal();
+        }}
         onImportSuccess={(count) => {
           fetchProjects();
           setToastMessage(`Successfully extracted and imported ${count} project(s) to your profile as DRAFT!`);

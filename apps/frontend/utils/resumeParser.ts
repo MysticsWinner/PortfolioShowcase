@@ -40,100 +40,21 @@ const COMMON_TECH_DICTIONARY: string[] = [
 
 /**
  * Extracts plain text from a File object client-side
+ * (Feature temporarily paused - Work in Progress to optimize device resource usage)
  */
 export async function extractTextFromFile(file: File): Promise<string> {
-  const extension = file.name.split('.').pop()?.toLowerCase();
-
-  // Plain text / Markdown / JSON files
-  if (extension === 'txt' || extension === 'md' || extension === 'json' || file.type.startsWith('text/')) {
-    return await file.text();
-  }
-
-  // PDF extraction using pdfjs-dist
-  if (extension === 'pdf' || file.type === 'application/pdf') {
-    try {
-      const pdfjs = await import('pdfjs-dist');
-      // Configure worker via CDN for browser compatibility
-      if (typeof window !== 'undefined' && !pdfjs.GlobalWorkerOptions.workerSrc) {
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdfjs.worker.min.mjs`;
-      }
-
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
-      const pdfDoc = await loadingTask.promise;
-
-      let extractedText = '';
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const page = await pdfDoc.getPage(i);
-        const textContent = await page.getTextContent();
-        const pageStrings = textContent.items
-          .map((item: any) => item.str || '')
-          .join(' ');
-        extractedText += pageStrings + '\n\n';
-      }
-
-      if (extractedText.trim().length > 0) {
-        return extractedText;
-      }
-    } catch (pdfErr) {
-      console.warn('pdfjs extraction notice, trying fallback text decoding:', pdfErr);
-      // Fallback: decode raw text stream if available
-      const buffer = await file.arrayBuffer();
-      const raw = new TextDecoder('utf-8', { fatal: false }).decode(buffer);
-      // Clean non-printable characters
-      const cleaned = raw.replace(/[^\x20-\x7E\t\r\n]/g, ' ');
-      if (cleaned.length > 100) {
-        return cleaned;
-      }
-    }
-  }
-
-  throw new Error(`Unsupported file type (.${extension}). Please upload a PDF, Markdown (.md), or plain text (.txt) resume.`);
+  // Feature temporarily disabled to prevent browser hangs while undergoing performance refactoring
+  throw new Error("On-device extraction is currently paused for optimization (Work in Progress).");
 }
+
 
 /**
  * Analyzes resume text and segments projects with confidence rating
+ * (Feature temporarily paused - Work in Progress)
  */
 export function parseResumeText(text: string): ParseResult {
-  const startTime = Date.now();
-  const cleanedText = text.replace(/\r\n/g, '\n');
-
-  // Detect candidate email
-  const emailMatch = cleanedText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
-  const candidateEmail = emailMatch ? emailMatch[0] : undefined;
-
-  // Extract all mentioned skills
-  const detectedSkills = extractTechnologies(cleanedText);
-
-  // Locate the PROJECTS section
-  const projectSectionRegex = /(?:^|\n)\s*(?:#+\s*)?(?:TECHNICAL\s+|KEY\s+|PERSONAL\s+|ACADEMIC\s+|SELECTED\s+)?(?:PROJECTS|PORTFOLIO|WORKS|FEATURED WORK)\s*[:\n\-—]/i;
-  const projectSectionMatch = cleanedText.search(projectSectionRegex);
-
-  let projectText = '';
-  if (projectSectionMatch !== -1) {
-    const afterHeading = cleanedText.slice(projectSectionMatch);
-    // Find next major section heading
-    const nextSectionRegex = /\n\s*(?:#+\s*)?(?:EXPERIENCE|WORK EXPERIENCE|EMPLOYMENT|EDUCATION|SKILLS|TECHNICAL SKILLS|CERTIFICATIONS|PUBLICATIONS|AWARDS|INTERESTS)\s*[:\n\-—]/i;
-    const nextSectionMatch = afterHeading.slice(30).search(nextSectionRegex);
-    if (nextSectionMatch !== -1) {
-      projectText = afterHeading.slice(0, nextSectionMatch + 30);
-    } else {
-      projectText = afterHeading;
-    }
-  } else {
-    // Fallback: search entire document
-    projectText = cleanedText;
-  }
-
-  const candidateProjects = extractProjectsFromChunk(projectText, cleanedText);
-
-  return {
-    rawText: cleanedText,
-    projects: candidateProjects,
-    detectedSkills,
-    candidateEmail,
-    durationMs: Date.now() - startTime,
-  };
+  // Feature temporarily disabled to prevent browser tab locking on device
+  throw new Error("On-device project extraction is currently paused for optimization (Work in Progress).");
 }
 
 function extractProjectsFromChunk(chunk: string, fullDocText: string): CandidateProject[] {

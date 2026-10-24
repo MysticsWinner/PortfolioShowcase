@@ -120,9 +120,9 @@
     "semantic_hash": ""
   },
   "apps/backend/src/modules/auth/auth.controller.ts": {
-    "mtime": 1792835450.0061479,
-    "seen": 1792835892.1725395,
-    "ast_hash": "4e13b53b5573d1602b63b8dddb3b5a8a",
+    "mtime": 1792841380.6292036,
+    "seen": 1792847066.8409185,
+    "ast_hash": "bfc085feed126658e76e8a48c8920c04",
     "semantic_hash": ""
   },
   "apps/backend/src/modules/auth/auth.module.ts": {
@@ -270,9 +270,9 @@
     "semantic_hash": ""
   },
   "apps/backend/src/modules/projects/projects.service.ts": {
-    "mtime": 1792838180.9169028,
-    "seen": 1792838603.8274446,
-    "ast_hash": "0b06d1a2cf910a064158f1e10bc46ece",
+    "mtime": 1792841408.5410328,
+    "seen": 1792847066.8409646,
+    "ast_hash": "724e065bddd9d6d2cdaadb7a25ca794d",
     "semantic_hash": ""
   },
   "apps/backend/src/modules/users/users.module.ts": {
@@ -420,9 +420,9 @@
     "semantic_hash": ""
   },
   "apps/frontend/app/dashboard/projects/page.tsx": {
-    "mtime": 1792838551.3437626,
-    "seen": 1792838603.8274884,
-    "ast_hash": "23d211f700751a9c686b7808e0c0c062",
+    "mtime": 1792847040.2238884,
+    "seen": 1792847066.8410213,
+    "ast_hash": "f540b6a8d247a21cfbbd829583cdde28",
     "semantic_hash": ""
   },
   "apps/frontend/app/layout.tsx": {
@@ -528,9 +528,9 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/HeroCanvas.tsx": {
-    "mtime": 1774249287.0,
-    "seen": 1792319259.5484743,
-    "ast_hash": "20bb9602ff0c424228c05d98bfe5714a",
+    "mtime": 1792846913.6160257,
+    "seen": 1792847066.8410568,
+    "ast_hash": "08fc39fb7f1f671aff54486b71abee33",
     "semantic_hash": ""
   },
   "apps/frontend/components/LiveChatWidget.tsx": {
@@ -786,15 +786,15 @@
     "semantic_hash": ""
   },
   "apps/frontend/components/ResumeImportModal.tsx": {
-    "mtime": 1792838352.109936,
-    "seen": 1792838603.8275359,
-    "ast_hash": "08d18c5cd746156f7122835085304ff9",
+    "mtime": 1792847020.0316575,
+    "seen": 1792847066.8410676,
+    "ast_hash": "c3293723fc54956fcb94475dcfbd86d5",
     "semantic_hash": ""
   },
   "apps/frontend/utils/resumeParser.ts": {
-    "mtime": 1792838289.991642,
-    "seen": 1792838603.8275523,
-    "ast_hash": "9abc505b48118aa15ab3a7056a66d2f5",
+    "mtime": 1792846993.8417592,
+    "seen": 1792847066.8410866,
+    "ast_hash": "e3cbe3ad845be9d9a06c336f846e6ba2",
     "semantic_hash": ""
   },
   "apps/frontend/app/api/blog/route.ts": {
