@@ -145,4 +145,36 @@ export class AuthService {
 
     return { message: "New OTP actively dispatched." };
   }
+
+  async updateProfile(userId: string, data: { name?: string }) {
+    const user = await this.users.findById(userId);
+    if (!user) throw new BadRequestException('User profile not found.');
+
+    const updatedUser = await this.users.update(userId, {
+      name: data.name?.trim() || user.name,
+    });
+
+    const { password: _, otp: __, otpExpiresAt: ___, ...sanitizedUser } = updatedUser;
+    return sanitizedUser;
+  }
+
+  async changePassword(userId: string, currentPass: string, newPass: string) {
+    const user = await this.users.findById(userId);
+    if (!user) throw new BadRequestException('User profile not found.');
+
+    const isMatch = await compare(currentPass, user.password);
+    if (!isMatch) {
+      throw new UnauthorizedException('Current password does not match.');
+    }
+
+    if (!newPass || newPass.length < 6) {
+      throw new BadRequestException('New password must be at least 6 characters.');
+    }
+
+    const { hash } = await import('bcrypt');
+    const hashedPassword = await hash(newPass, 10);
+
+    await this.users.update(userId, { password: hashedPassword });
+    return { success: true, message: 'Password updated successfully.' };
+  }
 }

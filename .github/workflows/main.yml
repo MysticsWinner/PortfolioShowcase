@@ -55,11 +55,79 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Render Deploy Hook
+        id: trigger-deploy
         run: |
           if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
             echo "Dispatching deployment trigger to Render..."
             curl -s -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
             echo "Render deploy hook successfully dispatched."
+            echo "triggered=true" >> $GITHUB_OUTPUT
           else
-            echo "No RENDER_DEPLOY_HOOK secret found. Skipping Render deployment."
+            echo "No RENDER_DEPLOY_HOOK secret found. Skipping Render deployment trigger."
+            echo "triggered=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Verify Live Deployment & Commit on Platform
+        if: steps.trigger-deploy.outputs.triggered == 'true' || env.RENDER_URL != ''
+        env:
+          RENDER_URL: ${{ secrets.RENDER_SERVICE_URL || secrets.PROD_BACKEND_URL }}
+        run: |
+          if [ -z "$RENDER_URL" ]; then
+            echo "::warning ::RENDER_SERVICE_URL secret is not set in repository secrets. Skipping live verification."
+            echo "To enable automated live verification, add RENDER_SERVICE_URL (e.g. https://portfolio-backend.onrender.com) to GitHub Repo Secrets."
+            exit 0
+          fi
+
+          TARGET_URL="${RENDER_URL%/}/health"
+          EXPECTED_SHA="${{ github.sha }}"
+          SHORT_SHA="${EXPECTED_SHA:0:7}"
+
+          echo "======================================================="
+          echo "Verifying Live Service Update on Render/External Host"
+          echo "Target Health URL: $TARGET_URL"
+          echo "Target Commit SHA: $EXPECTED_SHA ($SHORT_SHA)"
+          echo "======================================================="
+
+          # Polling loop: 24 attempts * 15 seconds = 6 minutes max
+          MAX_ATTEMPTS=24
+          ATTEMPT=1
+          VERIFIED=false
+
+          # Wait initial 15s before first probe to allow build initialization
+          sleep 15
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo -n "[$(date +'%T')] Attempt $ATTEMPT/$MAX_ATTEMPTS: "
+            RESPONSE=$(curl -s -m 12 "$TARGET_URL" || echo "{}")
+            STATUS=$(echo "$RESPONSE" | jq -r '.status // "offline"')
+            LIVE_COMMIT=$(echo "$RESPONSE" | jq -r '.hosting.gitCommit // "unknown"')
+            UPTIME=$(echo "$RESPONSE" | jq -r '.uptimeSeconds // 0')
+
+            echo "Status=$STATUS | Commit=$LIVE_COMMIT | Uptime=${UPTIME}s"
+
+            if [ "$STATUS" = "healthy" ]; then
+              if [[ "$LIVE_COMMIT" == *"$SHORT_SHA"* ]] || [ "$LIVE_COMMIT" = "$EXPECTED_SHA" ]; then
+                echo ""
+                echo "======================================================="
+                echo "🎉 DEPLOYMENT VERIFICATION SUCCEEDED!"
+                echo "Remote service is healthy and actively serving commit: $LIVE_COMMIT"
+                echo "======================================================="
+                VERIFIED=true
+                break
+              else
+                echo "  -> Service is healthy, but still serving previous commit ($LIVE_COMMIT). Waiting for rollout..."
+              fi
+            else
+              echo "  -> Container is waking or build in progress ($STATUS). Retrying..."
+            fi
+
+            ATTEMPT=$((ATTEMPT+1))
+            sleep 15
+          done
+
+          if [ "$VERIFIED" = false ]; then
+            echo ""
+            echo "::error ::Deployment verification timed out after 6 minutes. The new commit ($SHORT_SHA) is not yet active on $RENDER_URL."
+            exit 1
+          fi
+

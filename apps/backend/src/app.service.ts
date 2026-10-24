@@ -12,6 +12,8 @@ export interface HostingInfo {
   nodeEnv: string;
   platform: string;
   nodeVersion: string;
+  gitCommit?: string;
+  gitBranch?: string;
 }
 
 export interface HealthResponse {
@@ -41,6 +43,19 @@ export class AppService {
       provider = 'Production Cloud';
     }
 
+    const gitCommit =
+      process.env.RENDER_GIT_COMMIT ||
+      process.env.VERCEL_GIT_COMMIT_SHA ||
+      process.env.GIT_COMMIT ||
+      process.env.GITHUB_SHA ||
+      'development';
+
+    const gitBranch =
+      process.env.RENDER_GIT_BRANCH ||
+      process.env.VERCEL_GIT_COMMIT_REF ||
+      process.env.GIT_BRANCH ||
+      'unknown';
+
     return {
       provider,
       isRender,
@@ -52,6 +67,8 @@ export class AppService {
       nodeEnv: process.env.NODE_ENV || 'development',
       platform: process.platform,
       nodeVersion: process.version,
+      gitCommit,
+      gitBranch,
     };
   }
 

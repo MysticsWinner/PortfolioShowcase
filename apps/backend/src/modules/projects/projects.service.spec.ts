@@ -11,6 +11,7 @@ describe('ProjectsService', () => {
     const mockPrismaService = {
       project: {
         findMany: jest.fn(),
+        findUnique: jest.fn(),
         create: jest.fn(),
       },
     };

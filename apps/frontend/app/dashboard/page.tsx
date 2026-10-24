@@ -113,6 +113,20 @@ export default function DashboardPage() {
               <span>Manage Showcase Projects</span>
               <span className="text-gray-500">→</span>
             </Link>
+            <Link
+              href="/dashboard/messages"
+              className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-colors flex items-center justify-between"
+            >
+              <span>Visitor Inquiries & Live Chat</span>
+              <span className="text-gray-500">→</span>
+            </Link>
+            <Link
+              href="/dashboard/settings"
+              className="w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-gray-200 transition-colors flex items-center justify-between"
+            >
+              <span>Account & Security Settings</span>
+              <span className="text-gray-500">→</span>
+            </Link>
           </div>
         </div>
 

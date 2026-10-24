@@ -26,6 +26,8 @@ export interface HostingInfo {
   nodeEnv: string;
   platform: string;
   nodeVersion: string;
+  gitCommit?: string;
+  gitBranch?: string;
 }
 
 export interface HealthResponse {
@@ -78,6 +80,28 @@ function updateBackendState(partial: Partial<BackendState>) {
   listeners.forEach(fn => fn(currentBackendState));
 }
 
+// Check if JWT token has expired based on its exp claim
+export function isTokenExpired(token: string | null): boolean {
+  if (!token) return true;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    const payload = JSON.parse(jsonPayload);
+    if (!payload.exp) return false;
+    return payload.exp * 1000 <= Date.now();
+  } catch {
+    return true;
+  }
+}
+
 // 75-second timeout to accommodate Render free-tier cold boot times (~30-60s)
 const apiClient = axios.create({
   baseURL: API_URL,
@@ -87,8 +111,18 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (token) {
+      if (isTokenExpired(token)) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        if (!window.location.pathname.startsWith('/auth/')) {
+          window.location.href = '/auth/login?redirect=' + encodeURIComponent(window.location.pathname);
+        }
+        return Promise.reject(new axios.Cancel('Session expired'));
+      }
+      if (config.headers) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
   }
   return config;
@@ -307,3 +341,118 @@ export const adminApi = {
     return response.data;
   }
 };
+
+export interface RubricCriteria {
+  label: string;
+  maxPoints: number;
+  earnedPoints: number;
+  details: string;
+}
+
+export interface Project {
+  id: string;
+  title: string;
+  description: string;
+  content?: string | null;
+  visibility: 'PUBLIC' | 'PRIVATE';
+  status: 'DRAFT' | 'PUBLISHED';
+  repoUrl?: string | null;
+  liveUrl?: string | null;
+  thumbnail?: string | null;
+  workabilityScore?: number | null;
+  healthStatus?: 'ONLINE' | 'DEGRADED' | 'OFFLINE' | 'PENDING' | 'NO_LINK' | string | null;
+  lastHealthCheck?: string | null;
+  rubricConfig?: Record<string, number> | null;
+  technologies?: Array<{ technology: { id: string; name: string; category?: string | null } } | any>;
+  tags?: Array<{ tag: { id: string; name: string } }>;
+  breakdown?: Record<string, RubricCriteria>;
+  rubric?: Record<string, number>;
+  creatorId: string;
+  creator?: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+}
+
+export const projectsApi = {
+  async getPublicProjects(): Promise<Project[]> {
+    const response = await apiClient.get('/projects');
+    return response.data;
+  },
+  async getMyProjects(): Promise<Project[]> {
+    const response = await apiClient.get('/projects/my');
+    return response.data;
+  },
+  async getProject(id: string): Promise<Project> {
+    const response = await apiClient.get(`/projects/${id}`);
+    return response.data;
+  },
+  async createProject(data: Partial<Project> & { technologies?: string[] }): Promise<Project> {
+    const response = await apiClient.post('/projects', data);
+    return response.data;
+  },
+  async bulkCreate(projects: Array<Partial<Project> & { technologies?: string[] }>): Promise<{ count: number; projects: Project[] }> {
+    const response = await apiClient.post('/projects/bulk', { projects });
+    return response.data;
+  },
+  async checkHealth(id: string): Promise<{ project: Project; score: number; healthStatus: string; breakdown: Record<string, RubricCriteria>; rubric: Record<string, number> }> {
+    const response = await apiClient.post(`/projects/${id}/health-check`);
+    return response.data;
+  },
+  async updateRubric(id: string, rubricConfig: Record<string, number>): Promise<{ project: Project; score: number; breakdown: Record<string, RubricCriteria>; rubric: Record<string, number> }> {
+    const response = await apiClient.patch(`/projects/${id}/rubric`, rubricConfig);
+    return response.data;
+  },
+  async updateProject(id: string, data: Partial<Project> & { technologies?: string[] }): Promise<Project> {
+    const response = await apiClient.patch(`/projects/${id}`, data);
+    return response.data;
+  },
+  async deleteProject(id: string): Promise<{ success: boolean }> {
+    const response = await apiClient.delete(`/projects/${id}`);
+    return response.data;
+  },
+};
+
+
+export const messagesApi = {
+  async getMessages(): Promise<ContactMessage[]> {
+    const response = await apiClient.get('/contact');
+    return response.data;
+  },
+  async markAsRead(id: string, isRead: boolean = true): Promise<ContactMessage> {
+    const response = await apiClient.patch(`/contact/${id}/read`, { isRead });
+    return response.data;
+  },
+  async deleteMessage(id: string): Promise<{ success: boolean }> {
+    const response = await apiClient.delete(`/contact/${id}`);
+    return response.data;
+  },
+  async sendMessage(name: string, email: string, message: string): Promise<ContactMessage> {
+    const response = await apiClient.post('/contact', { name, email, message });
+    return response.data;
+  },
+};
+
+export const settingsApi = {
+  async updateProfile(data: { name?: string }): Promise<User> {
+    const response = await apiClient.patch('/auth/profile', data);
+    return response.data;
+  },
+  async changePassword(currentPassword: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+    const response = await apiClient.post('/auth/change-password', { currentPassword, newPassword });
+    return response.data;
+  },
+};
+

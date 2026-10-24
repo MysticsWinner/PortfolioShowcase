@@ -19,4 +19,23 @@ export class ContactService {
 
     return contactMessage;
   }
+
+  async findAll() {
+    return this.prisma.contactMessage.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async markAsRead(id: string, isRead: boolean = true) {
+    return this.prisma.contactMessage.update({
+      where: { id },
+      data: { isRead },
+    });
+  }
+
+  async delete(id: string) {
+    return this.prisma.contactMessage.delete({
+      where: { id },
+    });
+  }
 }

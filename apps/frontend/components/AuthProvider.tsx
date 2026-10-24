@@ -1,8 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { authApi, systemApi, User } from '../utils/api';
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { authApi, systemApi, User, isTokenExpired } from '../utils/api';
 
 interface AuthContextType {
   user: User | null;
@@ -13,17 +13,69 @@ interface AuthContextType {
   logout: () => void;
   refreshUser: () => Promise<User | null>;
   setSession: (token: string, user: User, rememberMe?: boolean) => void;
+  verifySession: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const lastVerifiedRef = useRef<number>(0);
 
-  // Re-hydrate session from localStorage and validate with server
+  // Core session verification against backend and token exp claim
+  const verifySession = useCallback(async (): Promise<boolean> => {
+    if (typeof window === 'undefined') return false;
+
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) {
+      if (token || user) {
+        setToken(null);
+        setUser(null);
+      }
+      return false;
+    }
+
+    // Instant local verification of JWT expiration
+    if (isTokenExpired(storedToken)) {
+      console.warn("Session expired based on token expiration claim. Purging authentication state.");
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setToken(null);
+      setUser(null);
+      if (pathname && (pathname.startsWith('/dashboard') || pathname.startsWith('/admin'))) {
+        router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+      }
+      return false;
+    }
+
+    // Active server verification via /auth/me heartbeat
+    try {
+      lastVerifiedRef.current = Date.now();
+      const freshUser = await authApi.getProfile();
+      setUser(freshUser);
+      setToken(storedToken);
+      localStorage.setItem('user', JSON.stringify(freshUser));
+      return true;
+    } catch (apiErr: any) {
+      if (apiErr.response?.status === 401 || apiErr.response?.status === 403) {
+        console.warn("Session rejected by server, cleaning up authentication state.");
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setToken(null);
+        setUser(null);
+        if (pathname && (pathname.startsWith('/dashboard') || pathname.startsWith('/admin'))) {
+          router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+        }
+      }
+      return false;
+    }
+  }, [token, user, pathname, router]);
+
+  // Initial rehydration on mount
   const rehydrateSession = useCallback(async () => {
     if (typeof window === 'undefined') return;
 
@@ -32,29 +84,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedUser = localStorage.getItem('user');
 
       if (storedToken) {
-        setToken(storedToken);
-        if (storedUser) {
-          try {
-            setUser(JSON.parse(storedUser));
-          } catch {
-            // In case of corrupt JSON, will refresh via API
+        if (isTokenExpired(storedToken)) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setToken(null);
+          setUser(null);
+        } else {
+          setToken(storedToken);
+          if (storedUser) {
+            try {
+              setUser(JSON.parse(storedUser));
+            } catch {
+              // fallback to remote verify
+            }
           }
-        }
-
-        // Validate token integrity and refresh profile dynamically
-        try {
-          const freshUser = await authApi.getProfile();
-          setUser(freshUser);
-          localStorage.setItem('user', JSON.stringify(freshUser));
-        } catch (apiErr: any) {
-          // If server rejects the token (e.g., expired or user suspended), purge cleanly
-          if (apiErr.response?.status === 401 || apiErr.response?.status === 403) {
-            console.warn("Session expired or invalid, cleaning up authentication state.");
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setToken(null);
-            setUser(null);
-          }
+          await verifySession();
         }
       } else {
         setToken(null);
@@ -65,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [verifySession]);
 
   useEffect(() => {
     // Early non-blocking wake-up probe for Render container cold starts
@@ -82,6 +126,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [rehydrateSession]);
+
+  // Actively verify session on route change
+  useEffect(() => {
+    const storedToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    if (storedToken) {
+      verifySession();
+    }
+  }, [pathname, verifySession]);
+
+  // Actively verify session on user activity (clicks, keys, tab focus, visibility change)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkActivity = () => {
+      const storedToken = localStorage.getItem('token');
+      if (!storedToken) return;
+
+      // Instant check for token expiry on every user activity
+      if (isTokenExpired(storedToken)) {
+        verifySession();
+        return;
+      }
+
+      // Throttled server verification on user activity (at most once every 30 seconds)
+      const now = Date.now();
+      if (now - lastVerifiedRef.current > 30000) {
+        verifySession();
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkActivity();
+      }
+    };
+
+    const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart'];
+    activityEvents.forEach(evt => window.addEventListener(evt, checkActivity, { passive: true }));
+    window.addEventListener('focus', checkActivity);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      activityEvents.forEach(evt => window.removeEventListener(evt, checkActivity));
+      window.removeEventListener('focus', checkActivity);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [verifySession]);
 
   const setSession = (newToken: string, newUser: User, rememberMe = true) => {
     setToken(newToken);
@@ -143,6 +234,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout,
         refreshUser,
         setSession,
+        verifySession,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, Get, Patch, UseGuards, Req, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
@@ -34,6 +34,18 @@ export class AuthController {
     }
     const { password, otp, otpExpiresAt, ...safeUser } = req.user;
     return safeUser;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  updateProfile(@Req() req: any, @Body() body: { name?: string }) {
+    return this.authService.updateProfile(req.user.id, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  changePassword(@Req() req: any, @Body() body: { currentPassword: string; newPassword: string }) {
+    return this.authService.changePassword(req.user.id, body.currentPassword, body.newPassword);
   }
 }
 

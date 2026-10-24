@@ -73,6 +73,12 @@ model Project {
   liveUrl   String?
   thumbnail String?
 
+  // Quality & Showcase Scoring
+  workabilityScore Int?
+  healthStatus     String?   // "ONLINE" | "DEGRADED" | "NO_LINK"
+  lastHealthCheck  DateTime?
+  rubricConfig     Json?     // custom criteria weights: e.g. { liveUrl: 30, repo: 25, tech: 20, content: 15, details: 10 }
+
   creatorId String
   creator   User   @relation(fields: [creatorId], references: [id])
 

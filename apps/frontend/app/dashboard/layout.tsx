@@ -8,13 +8,21 @@ import { useAuth } from '../../components/AuthProvider';
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, verifySession } = useAuth();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+      } else {
+        verifySession().then((isValid) => {
+          if (!isValid) {
+            router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
+          }
+        });
+      }
     }
-  }, [isLoading, isAuthenticated, router, pathname]);
+  }, [isLoading, isAuthenticated, router, pathname, verifySession]);
 
   if (isLoading) {
     return (

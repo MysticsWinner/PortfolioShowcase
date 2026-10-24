@@ -45,12 +45,31 @@ export default function BlogPage() {
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-pink-400">
-          Dev Log
-        </h1>
-        <p className="text-gray-400 mb-12 text-lg">
-          Insights, learnings, and thoughts on software architecture and full-stack development.
-        </p>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-violet-400 mb-1">
+              <span>Engineering Publication</span>
+              <span>•</span>
+              <span className="text-gray-400">{posts.length} Article{posts.length !== 1 ? 's' : ''}</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-pink-400">
+              Dev Log
+            </h1>
+            <p className="text-gray-400 mt-2 text-base max-w-xl">
+              Insights, technical post-mortems, and architectural deep-dives from the Portfolio Showcase engineering team.
+            </p>
+          </div>
+
+          <Link
+            href="/dashboard/blog"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-violet-600 to-pink-600 hover:from-violet-500 hover:to-pink-500 text-white font-semibold text-xs shadow-lg shadow-violet-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] self-start sm:self-auto"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            <span>+ Author New Article</span>
+          </Link>
+        </div>
 
         <NewsletterWidget />
 

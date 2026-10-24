@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { Command } from 'cmdk';
 import { useRouter } from 'next/navigation';
-import { Search, Home, FileText, Mail, User, Shield, Terminal } from 'lucide-react';
+import { Search, Home, FileText, Mail, User, Shield, Terminal, FolderKanban, MessageSquare, Settings } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function CommandPalette() {
@@ -57,8 +57,20 @@ export default function CommandPalette() {
                   <Command.Item onSelect={() => runCommand(() => router.push('/'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
                     <Home className="w-4 h-4 mr-3 text-violet-400" /> Home
                   </Command.Item>
+                  <Command.Item onSelect={() => runCommand(() => router.push('/dashboard/projects'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
+                    <FolderKanban className="w-4 h-4 mr-3 text-emerald-400" /> Showcase Projects
+                  </Command.Item>
+                  <Command.Item onSelect={() => runCommand(() => router.push('/dashboard/messages'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
+                    <MessageSquare className="w-4 h-4 mr-3 text-amber-400" /> Messages & Gateway
+                  </Command.Item>
+                  <Command.Item onSelect={() => runCommand(() => router.push('/dashboard/settings'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
+                    <Settings className="w-4 h-4 mr-3 text-indigo-400" /> Account Settings
+                  </Command.Item>
                   <Command.Item onSelect={() => runCommand(() => router.push('/blog'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
                     <Terminal className="w-4 h-4 mr-3 text-pink-400" /> Dev Log (Blog)
+                  </Command.Item>
+                  <Command.Item onSelect={() => runCommand(() => router.push('/dashboard/blog'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
+                    <FileText className="w-4 h-4 mr-3 text-violet-400" /> Dev Log Studio (Write Articles)
                   </Command.Item>
                   <Command.Item onSelect={() => runCommand(() => router.push('/contact'))} className="flex items-center px-4 py-3 rounded-md text-sm text-gray-300 hover:bg-white/10 hover:text-white cursor-pointer transition-colors aria-selected:bg-white/10 aria-selected:text-white">
                     <Mail className="w-4 h-4 mr-3 text-emerald-400" /> Contact Intel
